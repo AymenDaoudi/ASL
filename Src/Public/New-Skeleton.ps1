@@ -1,3 +1,5 @@
+using module ..\Exceptions\InvalidProjectParametersException.psm1
+
 function New-Skeleton {
     [CmdletBinding()] #<<-- This turns a regular function into an advanced function
     param (
@@ -15,22 +17,40 @@ function New-Skeleton {
         # Create Solution folder
         $SolutionLocation = New-Solution $RootFolder $SolutionName
 
-        # Create main Api project
-        New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Api -ProjectType webapi
-        Remove-Item "$SolutionLocation\$SolutionName.Api\Controllers\WeatherForecastController.cs"
-        Remove-Item "$SolutionLocation\$SolutionName.Api\WeatherForecast.cs"
+        try {
+            # Create main Api project
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Api -ProjectType webapi
+            Remove-Item "$SolutionLocation\$SolutionName.Api\Controllers\WeatherForecastController.cs"
+            Remove-Item "$SolutionLocation\$SolutionName.Api\WeatherForecast.cs"
+            New-Folder -Location "$SolutionLocation\$SolutionName.Api" -Name "Dtos" | Out-Null
 
-        # Create main Services project
-        New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType classlib
-        Remove-Item "$SolutionLocation\$SolutionName.Services\Class1.cs"
+            # Create Services project
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType classlib
+            Remove-Item "$SolutionLocation\$SolutionName.Services\Class1.cs"
 
-        # Create main Api project
-        New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Domain -ProjectType classlib
-        Remove-Item "$SolutionLocation\$SolutionName.Domain\Class1.cs"
+            # Create Domain project
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Domain -ProjectType classlib
+            Remove-Item "$SolutionLocation\$SolutionName.Domain\Class1.cs"
 
-        # Create main Api project
-        New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Data -ProjectType classlib
-        Remove-Item "$SolutionLocation\$SolutionName.Data\Class1.cs"
+            # Create Data project
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Data -ProjectType classlib
+            Remove-Item "$SolutionLocation\$SolutionName.Data\Class1.cs"
+        }
+        catch [System.IO.IOException]{
+            Write-Host "$($_.Exception.Message)"
+            Remove-Item "$SolutionLocation"
+            Exit
+        }
+        catch [InvalidProjectParametersException]{
+            Write-Host "$($_.Exception.Message)"
+            Remove-Item "$SolutionLocation"
+            Exit
+        }
+        catch{
+            throw "$($_.Exception.Message)"
+            Remove-Item "$SolutionLocation"
+            Exit
+        }
 
         # Add Api project to the solution
         Write-Verbose "Adding project $SolutionName.Api to the main solution $SolutionName ..."
