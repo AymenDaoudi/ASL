@@ -14,7 +14,7 @@ function New-Skeleton {
     }
     process
     {
-        # Create Solution folder
+        # Create empty solution
         $SolutionLocation = New-Solution $RootFolder $SolutionName
 
         try {
@@ -25,7 +25,7 @@ function New-Skeleton {
             New-Folder -Location "$SolutionLocation\$SolutionName.Api" -Name "Dtos" | Out-Null
 
             # Create Services project
-            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType classlib
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType webapi
             Remove-Item "$SolutionLocation\$SolutionName.Services\Class1.cs"
 
             # Create Domain project
@@ -38,18 +38,21 @@ function New-Skeleton {
         }
         catch [System.IO.IOException]{
             Write-Host "$($_.Exception.Message)"
-            Remove-Item "$SolutionLocation"
-            Exit
+            Write-Verbose "API creation failed, reverting and deleting created elements."
+            Remove-Item "$SolutionLocation" -Recurse
+            Break
         }
         catch [InvalidProjectParametersException]{
             Write-Host "$($_.Exception.Message)"
-            Remove-Item "$SolutionLocation"
-            Exit
+            Write-Verbose "API creation failed, reverting and deleting created elements."
+            Remove-Item "$SolutionLocation" -Recurse
+            Break
         }
         catch{
             throw "$($_.Exception.Message)"
-            Remove-Item "$SolutionLocation"
-            Exit
+            Write-Verbose "API creation failed, reverting and deleting created elements."
+            Remove-Item "$SolutionLocation" -Recurse
+            Break
         }
 
         # Add Api project to the solution
