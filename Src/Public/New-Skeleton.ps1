@@ -25,7 +25,7 @@ function New-Skeleton {
             New-Folder -Location "$SolutionLocation\$SolutionName.Api" -Name "Dtos" | Out-Null
 
             # Create Services project
-            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType webapi
+            New-Project -SolutionLocation $SolutionLocation -SolutionName $SolutionName -ProjectName Services -ProjectType classlib
             Remove-Item "$SolutionLocation\$SolutionName.Services\Class1.cs"
 
             # Create Domain project
@@ -54,6 +54,21 @@ function New-Skeleton {
             Remove-Item "$SolutionLocation" -Recurse
             Break
         }
+
+        # Reference Service project in WebApi project
+        Write-Verbose "Referencing Services project in Api project..."
+        dotnet add "$SolutionLocation\$SolutionName.Api\$SolutionName.Api.csproj" reference "$SolutionLocation\$SolutionName.Services\$SolutionName.Services.csproj"
+        Write-Verbose "Services project referenced in Api project successfully."
+
+        # Reference Service project in WebApi project
+        Write-Verbose "Referencing Domain project in Data project..."
+        dotnet add "$SolutionLocation\$SolutionName.Data\$SolutionName.Data.csproj" reference "$SolutionLocation\$SolutionName.Domain\$SolutionName.Domain.csproj"
+        Write-Verbose "Domain project referenced in Data project successfully."
+
+        # Reference Service project in WebApi project
+        Write-Verbose "Referencing Data project in Services project..."
+        dotnet add "$SolutionLocation\$SolutionName.Services\$SolutionName.Services.csproj" reference "$SolutionLocation\$SolutionName.Data\$SolutionName.Data.csproj"
+        Write-Verbose "Data project referenced in Services project successfully."
 
         # Add Api project to the solution
         Write-Verbose "Adding project $SolutionName.Api to the main solution $SolutionName ..."
