@@ -1,52 +1,68 @@
-﻿using System.CodeDom;
-using System.Reflection;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using CodeGenerator.Generators.Methods;
+using CodeGenerator.Entities;
+using CodeGenerator.Generators.Classes;
 
 namespace CodeGenerator
 {
-    public class IServiceCollectionExtensionsCodeGenerator : ClassCodeGenerator
+    public class IServiceCollectionExtensionsCodeGenerator : CodeFileAbstractGenerator
     {
         public IServiceCollectionExtensionsCodeGenerator(
             string @namespace,
-            string @class,
-            TypeAttributes modifier,
-            bool isStatic,
             params string[] usings
-        ) : base(
-            @namespace,
-            @class,
-            modifier,
-            isStatic,
-            usings
-        )
+        ) : base(@namespace, usings)
         {
-            var servicesRegistrationMethod = CreateServicesRegistrationMethod("RegisterRepositories");
-            var repositoriesRegistrationMethod = CreateServicesRegistrationMethod("RegisterServices");
-
-            methods.Add(servicesRegistrationMethod);
-            methods.Add(repositoriesRegistrationMethod);
         }
 
-        private CodeMemberMethod CreateServicesRegistrationMethod(string methodName)
+        private IEnumerable<MethodDeclarationSyntax> GenerateMethods()
         {
-            CodeMemberMethod registerRepositoriesMethod = new CodeMemberMethod();
-            
-            registerRepositoriesMethod.Attributes = MemberAttributes.Public | MemberAttributes.Static;
-            registerRepositoriesMethod.Name = methodName;
-            
-            var servicesParam = new CodeParameterDeclarationExpression($"this {nameof(IServiceCollection)}", "services");
-            
-            registerRepositoriesMethod.Parameters.Add(servicesParam);
-            registerRepositoriesMethod.ReturnType =
-                new CodeTypeReference(nameof(IServiceCollection), CodeTypeReferenceOptions.GenericTypeParameter);
+            var extensionMethodGenerator = new ExtensionMethodGenerator();
 
-            var returnStatement = new CodeMethodReturnStatement();
-            returnStatement.Expression = new CodeArgumentReferenceExpression("services");
+            var registerRepositoriesMethod = extensionMethodGenerator
+                .Initialize(new ExtensionMethodEntity("RegisterRepositories", nameof(IServiceCollection), "services"), nameof(IServiceCollection))
+                .SetStatements(SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("services")))
+                .Generate();
 
-            registerRepositoriesMethod.Statements.Add(returnStatement);
+            var registerServicesMethod = extensionMethodGenerator
+                .Initialize(new ExtensionMethodEntity("RegisterServices", nameof(IServiceCollection), "services"), nameof(IServiceCollection))
+                .SetStatements(SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("services")))
+                .Generate();
 
-            return registerRepositoriesMethod;
+            return new MethodDeclarationSyntax[]{registerRepositoriesMethod, registerServicesMethod};
+        }
+
+        protected override CompilationUnitSyntax GenerateCode()
+        {
+            var classGenerator = new ClassGenerator();
+            var modifiers = new SyntaxToken[]
+            {
+                SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                SyntaxFactory.Token(SyntaxKind.StaticKeyword)
+            };
+
+            var @class = classGenerator
+                .Initialize("IServiceCollectionExtensions", modifiers)
+                .SetMethods(GenerateMethods().ToArray())
+                .Generate();
+            
+            var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(@namespace));
+            namespaceDeclaration = namespaceDeclaration
+                .AddMembers(@class);
+
+            var compilationUnit = SyntaxFactory.CompilationUnit(
+                new SyntaxList<ExternAliasDirectiveSyntax>(),
+                new SyntaxList<UsingDirectiveSyntax>(usings.Select(@using => SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(@using)))),
+                new SyntaxList<AttributeListSyntax>(),
+                new SyntaxList<MemberDeclarationSyntax>(namespaceDeclaration));
+
+            return compilationUnit;
         }
     }
 }
