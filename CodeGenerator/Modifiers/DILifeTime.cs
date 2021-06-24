@@ -1,6 +1,6 @@
 ﻿namespace CodeGenerator
 {
-    public enum DILifeTime
+    public enum DILifetime
     {
         Scoped,
         Transient,
