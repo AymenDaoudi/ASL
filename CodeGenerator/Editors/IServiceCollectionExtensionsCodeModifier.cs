@@ -4,15 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using CodeGenerator.Exceptions;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using CodeGenerator.Exceptions;
+using Domain.Entities;
+
 using static CodeGenerator.Consts.IServiceCollectionExtension;
 
-namespace CodeGenerator.Modifiers
+namespace CodeGenerator.Editors
 {
     public class IServiceCollectionExtensionsCodeModifier
     {
@@ -110,7 +111,7 @@ namespace CodeGenerator.Modifiers
                         SyntaxFactory.IdentifierName(ImplementationTypeName),
                     }
                 )));
-            
+
 
             var memberaccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, returnStatement.Expression, genericMethod);
             var argumentList = SyntaxFactory.SeparatedList(Array.Empty<ArgumentSyntax>());
@@ -226,7 +227,7 @@ namespace CodeGenerator.Modifiers
             catch (InvalidOperationException e) when (e.Message == "Sequence contains more than one matching element")
             {
                 throw new NoOrMultipleRegisteServicesMethodsException(
-                    NoOrMultipleRegisteServicesMethodsException.MULTIPLE_REGISTER_SERVICES_METHODS_ERROR_MESSAGE, 
+                    NoOrMultipleRegisteServicesMethodsException.MULTIPLE_REGISTER_SERVICES_METHODS_ERROR_MESSAGE,
                     innerException: e
                 );
             }
