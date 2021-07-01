@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Linq;
+
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using CodeGenerator.Generators.Mappers;
@@ -9,46 +11,56 @@ using Domain.Entities.Types.Classes;
 
 namespace CodeGenerator.Generators.Classes
 {
-    public class ClassGenerator : ClassGeneratorBase<ClassEntityBase, ClassDeclarationSyntax>, IClassGenerator<ClassEntityBase, MethodEntityBase>
+    public class ClassGenerator : IClassGenerator<ClassEntityBase, MethodEntityBase>
     {
-        public IClassGenerator<ClassEntityBase, MethodEntityBase> Initialize(string className, Modifiers modifiers)
+        public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> Initialize(string className, Modifiers modifiers)
         {
             AccessModifiersMapper accessModifiersMapper = new AccessModifiersMapper();
             var syntaxTokens = accessModifiersMapper.From(modifiers);
 
-            @class = SyntaxFactory
+            var @class = SyntaxFactory
                 .ClassDeclaration(className)
                 .AddModifiers(syntaxTokens);
 
-            return this;
+            var initializedClassGenerator = new InitializedClassGenerator(@class);
+
+            return initializedClassGenerator;
         }
 
-        public IClassGenerator<ClassEntityBase, MethodEntityBase> SetFields()
+        private class InitializedClassGenerator : ClassGeneratorBase<ClassEntityBase, ClassDeclarationSyntax>, IInitializedClassGenerator<ClassEntityBase, MethodEntityBase>
         {
-            //@class.Members.AddRange(new CodeTypeMemberCollection(fields.ToArray<CodeTypeMember>()));
-            return this;
-        }
+            public InitializedClassGenerator(ClassDeclarationSyntax @class)
+            {
+                this.@class = @class;
+            }
+            
+            public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> SetFields()
+            {
+                //@class.Members.AddRange(new CodeTypeMemberCollection(fields.ToArray<CodeTypeMember>()));
+                return this;
+            }
 
-        public IClassGenerator<ClassEntityBase, MethodEntityBase> SetProperties()
-        {
-            //@class.Members.AddRange(new CodeTypeMemberCollection(properties.ToArray<CodeTypeMember>()));
-            return this;
-        }
+            public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> SetProperties()
+            {
+                //@class.Members.AddRange(new CodeTypeMemberCollection(properties.ToArray<CodeTypeMember>()));
+                return this;
+            }
 
-        public IClassGenerator<ClassEntityBase, MethodEntityBase> SetMethods(params MethodEntityBase[] methods)
-        {
-            //@class = @class.AddMembers(methods.Select(m => m.Method).ToArray());
-            return this;
-        }
+            public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> SetMethods(params MethodEntityBase[] methods)
+            {
+                @class = @class.AddMembers(methods.Select(m => (MemberDeclarationSyntax)m.Method).ToArray());
+                return this;
+            }
 
-        protected override ClassEntityBase GenerateClassEntity(ClassDeclarationSyntax classRoot)
-        {
-            var classEntity = new ClassEntityBase(
-                classRoot.Identifier.ValueText,
-                classRoot
-            );
+            protected override ClassEntityBase GenerateClassEntity(ClassDeclarationSyntax classRoot)
+            {
+                var classEntity = new ClassEntityBase(
+                    classRoot.Identifier.ValueText,
+                    classRoot
+                );
 
-            return classEntity;
+                return classEntity;
+            }
         }
     }
 }

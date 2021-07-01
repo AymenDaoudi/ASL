@@ -113,13 +113,14 @@ namespace CodeGenerator.Editors
                 )));
 
 
-            var memberaccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, returnStatement.Expression, genericMethod);
+            var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, returnStatement.Expression, genericMethod);
             var argumentList = SyntaxFactory.SeparatedList(Array.Empty<ArgumentSyntax>());
 
             var newReturnStatement =
                 SyntaxFactory.ReturnStatement(
-                SyntaxFactory.InvocationExpression(memberaccess,
-                SyntaxFactory.ArgumentList(argumentList)));
+                    SyntaxFactory.InvocationExpression(
+                        memberAccess, 
+                        SyntaxFactory.ArgumentList(argumentList)));
 
             code = code.TrackNodes(statements.Distinct());
             foreach (var statement in statements)
@@ -256,11 +257,11 @@ namespace CodeGenerator.Editors
                 _ => ADD_SCOPED,
             };
 
-            var newLineTrivia = SyntaxFactory.SyntaxTrivia(SyntaxKind.EndOfLineTrivia, "\n");
+            //var newLineTrivia = SyntaxFactory.SyntaxTrivia(SyntaxKind.EndOfLineTrivia, "\n");
             var newLineTrivia2 = SyntaxFactory.CarriageReturnLineFeed;
             SyntaxTriviaList threeLeadingTabs = SyntaxFactory.TriviaList(SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab);
-            SyntaxTriviaList fourLeadingTabs = SyntaxFactory.TriviaList(SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab);
-            SyntaxTriviaList leadingWhiteSpace = SyntaxFactory.TriviaList(SyntaxFactory.ElasticWhitespace(" "));
+            //SyntaxTriviaList fourLeadingTabs = SyntaxFactory.TriviaList(SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab);
+            //SyntaxTriviaList leadingWhiteSpace = SyntaxFactory.TriviaList(SyntaxFactory.ElasticWhitespace(" "));
 
             var genericMethod = SyntaxFactory.GenericName(
                 SyntaxFactory.Identifier(lifeTimeDiMethodName),

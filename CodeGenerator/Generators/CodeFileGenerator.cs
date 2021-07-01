@@ -4,21 +4,23 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using Domain.Entities.Namespaces;
 using Domain.Entities.Types;
+using Domain.AbstractRepositories.Files;
 
 namespace CodeGenerator.Generators
 {
-    public class CodeFileGeneratorBase<TType> : ICodeFileGenerator<TType> where TType : TypeEntityBase
+    public class CodeFileGenerator : ICodeFileGenerator<TypeEntityBase>
     {
-        public CodeFileGeneratorBase()
+        public CodeFileGenerator()
         {
 
         }
 
         public void CreateFile(
             string filePath,
-            NamespaceEntityBase<TType> namespaceEntity,
+            NamespaceEntityBase<TypeEntityBase> namespaceEntity,
             params string[] usings
         )
         {

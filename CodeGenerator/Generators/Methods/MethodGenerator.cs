@@ -13,66 +13,76 @@ using Domain.Entities.Statements;
 
 namespace CodeGenerator.Generators.Methods
 {
-    public class MethodGenerator : MethodGeneratorBase<MethodEntityBase, MethodDeclarationSyntax>, IMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
+    public class MethodGenerator : IInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
     {
-        public virtual MethodGenerator Initialize(
+        public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> Initialize(
             string methodName, 
             string returnTypeName, 
             Modifiers modifiers
         )
         {
-            var accessModifiersMapper = new AccessModifiersMapper(); 
+            var accessModifiersMapper = new AccessModifiersMapper();
             
-            _method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
-            _method = _method.AddModifiers(accessModifiersMapper.From(modifiers));
+            var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
+            method = method.AddModifiers(accessModifiersMapper.From(modifiers));
 
-            return this;
+            var initializedMethodGenerator = new InitializedMethodGenerator(method);
+            
+            return initializedMethodGenerator;
         }
 
-        public IMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
+        private class InitializedMethodGenerator : MethodGeneratorBase<MethodEntityBase, MethodDeclarationSyntax>, IInitializedInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
         {
-            var parameterSynatxes = parameters.Select(parameter => SyntaxFactory.Parameter(
-                new SyntaxList<AttributeListSyntax>(),
-                new SyntaxTokenList(),
-                SyntaxFactory.ParseTypeName(parameter.ParameterTypeName),
-                SyntaxFactory.Identifier(parameter.ParameterName),
-                null
-            ));
-
-            _method = _method.AddParameterListParameters(parameterSynatxes.ToArray());
-
-            return this;
-        }
-
-        public IMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> SetStatements(params StatementEntityBase[] statements)
-        {
-            //Todo: To Convert to a strategy pattern
-            var statementSyntaxes = new List<StatementSyntax>();
-
-            foreach (var statement in statements)
+            public InitializedMethodGenerator(MethodDeclarationSyntax method)
             {
-                if (statement is ReturnStatementEntity)
-                {
-                    statementSyntaxes.Add(SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName(((ReturnStatementEntity)statement).Expression)));
-                }
+                this._method = method;
             }
 
-            _method = _method.AddBodyStatements(statementSyntaxes.ToArray());
+            public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
+            {
+                var parameterSynatxes = parameters.Select(parameter => SyntaxFactory.Parameter(
+                    new SyntaxList<AttributeListSyntax>(),
+                    new SyntaxTokenList(),
+                    SyntaxFactory.ParseTypeName(parameter.ParameterTypeName),
+                    SyntaxFactory.Identifier(parameter.ParameterName),
+                    null
+                ));
 
-            return this;
-        }
+                _method = _method.AddParameterListParameters(parameterSynatxes.ToArray());
 
-        protected override MethodEntityBase GenerateMethodEntity()
-        {
-            AccessModifiersMapper accessModifiersMapper = new AccessModifiersMapper();
+                return this;
+            }
 
-            var methodEntity = new MethodEntityBase(
-                _method,
-                _method.Identifier.ValueText,
-                accessModifiersMapper.To(_method.Modifiers.ToArray())
-            );
+            public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> SetStatements(params StatementEntityBase[] statements)
+            {
+                //Todo: To Convert to a strategy pattern
+                var statementSyntaxes = new List<StatementSyntax>();
 
-            return methodEntity;
+                foreach (var statement in statements)
+                {
+                    if (statement is ReturnStatementEntity)
+                    {
+                        statementSyntaxes.Add(SyntaxFactory.ReturnStatement((ExpressionSyntax)((ReturnStatementEntity)statement).Expression.ExpressionRoot));
+                    }
+                }
+
+                _method = _method.AddBodyStatements(statementSyntaxes.ToArray());
+
+                return this;
+            }
+
+            protected override MethodEntityBase GenerateMethodEntity()
+            {
+                AccessModifiersMapper accessModifiersMapper = new AccessModifiersMapper();
+
+                var methodEntity = new MethodEntityBase(
+                    _method,
+                    _method.Identifier.ValueText,
+                    accessModifiersMapper.To(_method.Modifiers.ToArray())
+                );
+
+                return methodEntity;
+            }
         }
     }
 }

@@ -11,19 +11,19 @@ using Domain.AbstractRepositories.Methods;
 
 namespace CodeGenerator.Generators.Methods
 {
-    public class ExtensionMethodGenerator : MethodGeneratorBase<ExtensionMethodEntity, MethodDeclarationSyntax>, IMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>
+    public class ExtensionMethodGenerator : IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>
     {
-        public ExtensionMethodGenerator Initialize(
-            string methodName, 
-            string returnTypeName, 
-            string extendedTypeName, 
+        public IInitializedMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> Initialize(
+            string methodName,
+            string returnTypeName,
+            string extendedTypeName,
             string extendedTypeParameterName
         )
         {
             var accessModifiersMapper = new AccessModifiersMapper();
 
-            _method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
-            _method = _method.AddModifiers(accessModifiersMapper.From(ExtensionMethodEntity.Modifiers));
+            var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
+            method = method.AddModifiers(accessModifiersMapper.From(ExtensionMethodEntity.Modifiers));
             
             var ExtendedParam = SyntaxFactory.Parameter(
                 new SyntaxList<AttributeListSyntax>(),
@@ -32,44 +32,55 @@ namespace CodeGenerator.Generators.Methods
                 SyntaxFactory.Identifier(extendedTypeParameterName),
                 null
             );
-            _method = _method.AddParameterListParameters(ExtendedParam);
 
-            return this;
+            method = method.AddParameterListParameters(ExtendedParam);
+
+            var initializedExtensionMethodGenerator = new InitializedExtensionMethodGenerator(method);
+
+            return initializedExtensionMethodGenerator;
         }
 
-        public IMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
+        private class InitializedExtensionMethodGenerator : MethodGeneratorBase<ExtensionMethodEntity, MethodDeclarationSyntax>, IInitializedExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>
         {
-            throw new System.NotImplementedException();
-        }
-
-        public IMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> SetStatements(params StatementEntityBase[] statements)
-        {
-            //Todo: To Convert to a strategy pattern
-            var statementSyntaxes = new List<StatementSyntax>();
-
-            foreach (var statement in statements)
+            public InitializedExtensionMethodGenerator(MethodDeclarationSyntax method)
             {
-                if (statement is ReturnStatementEntity)
-                {
-                    statementSyntaxes.Add(SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName(((ReturnStatementEntity)statement).Expression)));
-                }
+                this._method = method;
             }
 
-            _method = _method.AddBodyStatements(statementSyntaxes.ToArray());
+            public IInitializedMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
+            {
+                throw new System.NotImplementedException();
+            }
 
-            return this;
-        }
+            public IInitializedMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> SetStatements(params StatementEntityBase[] statements)
+            {
+                //Todo: To Convert to a strategy pattern
+                var statementSyntaxes = new List<StatementSyntax>();
 
-        protected override ExtensionMethodEntity GenerateMethodEntity()
-        {
-            var classEntity = new ExtensionMethodEntity(
-                _method,
-                _method.Identifier.ValueText,
-                _method.ParameterList.Parameters.First().Type.ToString(),
-                _method.ParameterList.Parameters.First().Identifier.ValueText
-            );
+                foreach (var statement in statements)
+                {
+                    if (statement is ReturnStatementEntity)
+                    {
+                        statementSyntaxes.Add(SyntaxFactory.ReturnStatement((ExpressionSyntax)((ReturnStatementEntity)statement).Expression.ExpressionRoot));
+                    }
+                }
 
-            return classEntity;
+                _method = _method.AddBodyStatements(statementSyntaxes.ToArray());
+
+                return this;
+            }
+
+            protected override ExtensionMethodEntity GenerateMethodEntity()
+            {
+                var classEntity = new ExtensionMethodEntity(
+                    _method,
+                    _method.Identifier.ValueText,
+                    _method.ParameterList.Parameters.First().Type.ToString(),
+                    _method.ParameterList.Parameters.First().Identifier.ValueText
+                );
+
+                return classEntity;
+            }
         }
     }
 }
