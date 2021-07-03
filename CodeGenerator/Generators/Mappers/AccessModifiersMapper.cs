@@ -3,35 +3,36 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
+using Domain.AbstractRepositories.Modifiers;
 using Domain.Entities;
 
 namespace CodeGenerator.Generators.Mappers
 {
-    public class AccessModifiersMapper
+    internal class AccessModifiersMapper : IAccessModifierMapper<SyntaxToken>
     {
-        public SyntaxToken[] From(Modifiers modifier)
+        public SyntaxToken[] From(AccessModifiers accessModifier)
         {
-            var synatxTokens = modifier switch
+            var synatxTokens = accessModifier switch
             {
-                Modifiers.None => new SyntaxToken[] { },
-                Modifiers.Private => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) },
-                Modifiers.Public => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.PublicKeyword) },
-                Modifiers.Protected => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.ProtectedKeyword) },
-                Modifiers.Static => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.StaticKeyword) },
-                (Modifiers.Static | Modifiers.Private) => new SyntaxToken[]
+                AccessModifiers.None => new SyntaxToken[] { },
+                AccessModifiers.Private => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.PrivateKeyword) },
+                AccessModifiers.Public => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.PublicKeyword) },
+                AccessModifiers.Protected => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.ProtectedKeyword) },
+                AccessModifiers.Static => new SyntaxToken[] { SyntaxFactory.Token(SyntaxKind.StaticKeyword) },
+                (AccessModifiers.Static | AccessModifiers.Private) => new SyntaxToken[]
                 {
                     SyntaxFactory.Token(SyntaxKind.StaticKeyword),
                     SyntaxFactory.Token(SyntaxKind.PrivateKeyword)
                 },
-                (Modifiers.Static | Modifiers.Public) => new SyntaxToken[]
+                (AccessModifiers.Static | AccessModifiers.Public) => new SyntaxToken[]
                 {
-                        SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-                        SyntaxFactory.Token(SyntaxKind.PublicKeyword)
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                    SyntaxFactory.Token(SyntaxKind.PublicKeyword)
                 },
-                (Modifiers.Static | Modifiers.Protected) => new SyntaxToken[]
+                (AccessModifiers.Static | AccessModifiers.Protected) => new SyntaxToken[]
                 {
-                        SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-                        SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                    SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)
                 },
                 _ => new SyntaxToken[] { }
             };
@@ -39,13 +40,13 @@ namespace CodeGenerator.Generators.Mappers
             return synatxTokens;
         }
 
-        public Modifiers To(SyntaxToken[] syntaxTokens)
+        public AccessModifiers To(SyntaxToken[] syntaxTokens)
         {
             var syntaxKinds = syntaxTokens
                 .Select(t => t.Kind())
                 .ToArray();
 
-            Modifiers modifiers = To(syntaxKinds.First());
+            AccessModifiers modifiers = To(syntaxKinds.First());
 
             var syntaxKindsCounts = syntaxKinds.Count();
 
@@ -62,16 +63,16 @@ namespace CodeGenerator.Generators.Mappers
             return modifiers;
         }
 
-        private Modifiers To(SyntaxKind syntaxKind)
+        private AccessModifiers To(SyntaxKind syntaxKind)
         {
             var modifier = syntaxKind switch
             {
-                SyntaxKind.None => Modifiers.None,
-                SyntaxKind.PrivateKeyword => Modifiers.Private,
-                SyntaxKind.PublicKeyword => Modifiers.Public,
-                SyntaxKind.ProtectedKeyword => Modifiers.Protected,
-                SyntaxKind.StaticKeyword => Modifiers.Static,
-                _ => Modifiers.None
+                SyntaxKind.None => AccessModifiers.None,
+                SyntaxKind.PrivateKeyword => AccessModifiers.Private,
+                SyntaxKind.PublicKeyword => AccessModifiers.Public,
+                SyntaxKind.ProtectedKeyword => AccessModifiers.Protected,
+                SyntaxKind.StaticKeyword => AccessModifiers.Static,
+                _ => AccessModifiers.None
             };
 
             return modifier;

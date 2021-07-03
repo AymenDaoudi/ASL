@@ -1,13 +1,13 @@
-﻿using CodeGenerator.Generators.Statements;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using CodeGenerator.Generators.Statements;
 using Domain.AbstractRepositories.Methods;
 using Domain.Entities.Expressions;
 using Domain.Entities.Statements;
 using Domain.Entities.Types.Classes;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CodeGenerator.Generators.Methods
 {

@@ -9,32 +9,41 @@ using Domain.Entities.Types;
 
 namespace CodeGenerator.Generators.Namespaces
 {
-    public class NamespaceGenerator : NamespaceGeneratorBase<NamespaceEntityBase<TypeEntityBase>, NamespaceDeclarationSyntax>, 
-        INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase>
+    public class NamespaceGenerator : INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase>
     {
-        public virtual INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> Initialize(string namespaceName)
+        public IInitializedNamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> Initialize(string namespaceName)
         {
-            @namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(namespaceName));
+            var @namespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(namespaceName));
 
-            return this;
+            var initializedNamespaceGenerator = new InitializedNamespaceGenerator(@namespace);
+
+            return initializedNamespaceGenerator;
         }
 
-        public INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> SetMemebers(params TypeEntityBase[] members)
+        private class InitializedNamespaceGenerator : NamespaceGeneratorBase<NamespaceEntityBase<TypeEntityBase>, NamespaceDeclarationSyntax>, IInitializedNamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase>
         {
-            @namespace = @namespace.AddMembers(members.Select(m => (MemberDeclarationSyntax)m.TypeRoot).ToArray());
+            public InitializedNamespaceGenerator(NamespaceDeclarationSyntax @namespace)
+            {
+                this.@namespace = @namespace;
+            }
 
-            return this;
-        }
+            public IInitializedNamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> SetMemebers(params TypeEntityBase[] members)
+            {
+                @namespace = @namespace.AddMembers(members.Select(m => (MemberDeclarationSyntax)m.TypeRoot).ToArray());
 
-        protected override NamespaceEntityBase<TypeEntityBase> GenerateNamespaceEntity()
-        {
-            var namespaceEntity = new NamespaceEntityBase<TypeEntityBase>(
-                @namespace.Name.ToString(),
-                @namespace,
-                @namespace.Members.Select(m => new TypeEntityBase(((TypeDeclarationSyntax)m).Identifier.ValueText, (TypeDeclarationSyntax)m))
-            );
+                return this;
+            }
 
-            return namespaceEntity;
+            protected override NamespaceEntityBase<TypeEntityBase> GenerateNamespaceEntity()
+            {
+                var namespaceEntity = new NamespaceEntityBase<TypeEntityBase>(
+                    @namespace.Name.ToString(),
+                    @namespace,
+                    @namespace.Members.Select(m => new TypeEntityBase(((TypeDeclarationSyntax)m).Identifier.ValueText, (TypeDeclarationSyntax)m))
+                );
+
+                return namespaceEntity;
+            }
         }
     }
 }

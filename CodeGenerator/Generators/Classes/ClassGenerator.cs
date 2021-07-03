@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using CodeGenerator.Generators.Mappers;
+using Domain.AbstractRepositories.Modifiers;
 using Domain.AbstractRepositories.Types.Classes;
 using Domain.Entities;
 using Domain.Entities.Methods;
@@ -13,10 +14,16 @@ namespace CodeGenerator.Generators.Classes
 {
     public class ClassGenerator : IClassGenerator<ClassEntityBase, MethodEntityBase>
     {
-        public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> Initialize(string className, Modifiers modifiers)
+        private readonly IAccessModifierMapper<SyntaxToken> _accessModifierMapper;
+
+        public ClassGenerator(IAccessModifierMapper<SyntaxToken> accessModifierMapper)
         {
-            AccessModifiersMapper accessModifiersMapper = new AccessModifiersMapper();
-            var syntaxTokens = accessModifiersMapper.From(modifiers);
+            _accessModifierMapper = accessModifierMapper;
+        }
+
+        public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> Initialize(string className, AccessModifiers modifiers)
+        {
+            var syntaxTokens = _accessModifierMapper.From(modifiers);
 
             var @class = SyntaxFactory
                 .ClassDeclaration(className)

@@ -4,15 +4,22 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using CodeGenerator.Generators.Mappers;
 using Domain.Entities.Methods;
 using Domain.Entities.Statements;
 using Domain.AbstractRepositories.Methods;
+using Domain.AbstractRepositories.Modifiers;
 
 namespace CodeGenerator.Generators.Methods
 {
     public class ExtensionMethodGenerator : IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>
     {
+        private readonly IAccessModifierMapper<SyntaxToken> _accessModifierMapper;
+
+        public ExtensionMethodGenerator(IAccessModifierMapper<SyntaxToken> accessModifierMapper)
+        {
+            _accessModifierMapper = accessModifierMapper;
+        }
+
         public IInitializedMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> Initialize(
             string methodName,
             string returnTypeName,
@@ -20,10 +27,8 @@ namespace CodeGenerator.Generators.Methods
             string extendedTypeParameterName
         )
         {
-            var accessModifiersMapper = new AccessModifiersMapper();
-
             var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
-            method = method.AddModifiers(accessModifiersMapper.From(ExtensionMethodEntity.Modifiers));
+            method = method.AddModifiers(_accessModifierMapper.From(ExtensionMethodEntity.Modifiers));
             
             var ExtendedParam = SyntaxFactory.Parameter(
                 new SyntaxList<AttributeListSyntax>(),

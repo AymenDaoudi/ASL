@@ -11,7 +11,7 @@ using Domain.Entities.Statements;
 using Domain.AbstractRepositories.Files;
 using Domain.Entities.Files;
 
-namespace CodeGenerator.Generators.Classes
+namespace CodeGenerator
 {
     public class CodeFileModifier : ICodeFileModifier
     {
@@ -41,9 +41,9 @@ namespace CodeGenerator.Generators.Classes
         }
 
         public async Task ReplaceReturnStatementOfMethodOfClassAsync(
-            string filePath, 
-            string className, 
-            string methodName, 
+            string filePath,
+            string className,
+            string methodName,
             ReturnStatementEntity newRturnStatement
         )
         {

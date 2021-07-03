@@ -5,37 +5,48 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using CodeGenerator.Generators.Mappers;
 using Domain.AbstractRepositories.Methods;
 using Domain.Entities;
 using Domain.Entities.Methods;
 using Domain.Entities.Statements;
+using Domain.AbstractRepositories.Modifiers;
 
 namespace CodeGenerator.Generators.Methods
 {
     public class MethodGenerator : IInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
     {
+        private readonly IAccessModifierMapper<SyntaxToken> _accessModifierMapper;
+
+        public MethodGenerator(IAccessModifierMapper<SyntaxToken> accessModifierMapper)
+        {
+            _accessModifierMapper = accessModifierMapper;
+        }
+
         public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> Initialize(
             string methodName, 
             string returnTypeName, 
-            Modifiers modifiers
+            AccessModifiers modifiers
         )
         {
-            var accessModifiersMapper = new AccessModifiersMapper();
-            
             var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
-            method = method.AddModifiers(accessModifiersMapper.From(modifiers));
+            method = method.AddModifiers(_accessModifierMapper.From(modifiers));
 
-            var initializedMethodGenerator = new InitializedMethodGenerator(method);
+            var initializedMethodGenerator = new InitializedMethodGenerator(_accessModifierMapper, method);
             
             return initializedMethodGenerator;
         }
 
         private class InitializedMethodGenerator : MethodGeneratorBase<MethodEntityBase, MethodDeclarationSyntax>, IInitializedInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
         {
-            public InitializedMethodGenerator(MethodDeclarationSyntax method)
+            private readonly IAccessModifierMapper<SyntaxToken> _accessModifierMapper;
+
+            public InitializedMethodGenerator(
+                IAccessModifierMapper<SyntaxToken> accessModifierMapper, 
+                MethodDeclarationSyntax method
+            )
             {
-                this._method = method;
+                _method = method;
+                _accessModifierMapper = accessModifierMapper;
             }
 
             public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
@@ -73,12 +84,10 @@ namespace CodeGenerator.Generators.Methods
 
             protected override MethodEntityBase GenerateMethodEntity()
             {
-                AccessModifiersMapper accessModifiersMapper = new AccessModifiersMapper();
-
                 var methodEntity = new MethodEntityBase(
                     _method,
                     _method.Identifier.ValueText,
-                    accessModifiersMapper.To(_method.Modifiers.ToArray())
+                    _accessModifierMapper.To(_method.Modifiers.ToArray())
                 );
 
                 return methodEntity;

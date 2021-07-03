@@ -26,6 +26,7 @@ namespace CodeGenerator.Generators.Expressions
                 (ExpressionSyntax)parentExpression.ExpressionRoot, 
                 method
             );
+
             var argumentList = SyntaxFactory.SeparatedList(Array.Empty<ArgumentSyntax>());
 
             var methodInvocationExpression = SyntaxFactory.InvocationExpression(
@@ -41,7 +42,7 @@ namespace CodeGenerator.Generators.Expressions
         {
             public InitializedMethodInvocationExpressionGenerator(InvocationExpressionSyntax invocationExpressionSyntax)
             {
-                this._expression = invocationExpressionSyntax;
+                _expression = invocationExpressionSyntax;
             }
 
             protected override MethodInvocationExpressionEntity GenerateExpressionEntity()
