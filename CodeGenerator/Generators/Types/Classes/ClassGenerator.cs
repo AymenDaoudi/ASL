@@ -3,14 +3,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Types.Classes;
+using CodeGenerator.Abstract.Generators.Modifiers;
+using CodeGenerator.Abstract.Entities.Methods;
+using CodeGenerator.Abstract.Entities.Types.Classes;
+using CodeGenerator.Abstract.Entities;
 
-using Domain.AbstractRepositories.Modifiers;
-using Domain.AbstractRepositories.Types.Classes;
-using Domain.Entities;
-using Domain.Entities.Methods;
-using Domain.Entities.Types.Classes;
-
-namespace CodeGenerator.Generators.Classes
+namespace CodeGenerator.Roslyn.Generators.Types.Classes
 {
     public class ClassGenerator : IClassGenerator<ClassEntityBase, MethodEntityBase>
     {
@@ -40,7 +39,7 @@ namespace CodeGenerator.Generators.Classes
             {
                 this.@class = @class;
             }
-            
+
             public IInitializedClassGenerator<ClassEntityBase, MethodEntityBase> SetFields()
             {
                 //@class.Members.AddRange(new CodeTypeMemberCollection(fields.ToArray<CodeTypeMember>()));

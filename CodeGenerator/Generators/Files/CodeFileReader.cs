@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Files;
+using CodeGenerator.Abstract.Entities.Files;
+using CodeGenerator.Abstract.Entities.Types.Classes;
 
-using Domain.AbstractRepositories.Files;
-using Domain.Entities.Types.Classes;
-using Domain.Entities.Files;
-
-namespace CodeGenerator
+namespace CodeGenerator.Roslyn.Generators.Files
 {
     public class CodeFileReader : ICodeFileReader<CodeFileEntityBase>
     {
@@ -44,7 +43,7 @@ namespace CodeGenerator
                 .OfType<ClassDeclarationSyntax>()
                 .Single(c => c.Identifier.ValueText == className);
 
-            var classEntity = new IServiceCollectionExtensionsEntity(className, classDeclarationSyntax);
+            var classEntity = new ClassEntityBase(className, classDeclarationSyntax);
             return classEntity;
         }
     }

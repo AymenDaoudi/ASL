@@ -1,14 +1,41 @@
-﻿namespace CodeGenerator
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
+namespace CodeGenerator.Roslyn
 {
     public static class Consts
     {
-        public static class IServiceCollectionExtension
+        public static class Spaces
         {
-            public const string REGISTER_SERVICES = "RegisterServices";
-            public const string REGISTER_REPOSITORIES = "RegisterRepositories";
-            public const string ADD_SCOPED = "AddScoped";
-            public const string ADD_TRANSIENT = "AddTransient";
-            public const string ADD_SINGLETON = "AddSingleton";
+            public static class Tabs
+            {
+                public static readonly SyntaxTriviaList THREE_TABS = SyntaxFactory.TriviaList(
+                SyntaxFactory.ElasticTab,
+                SyntaxFactory.ElasticTab,
+                SyntaxFactory.ElasticTab
+            );
+
+                public static readonly SyntaxTriviaList SIX_TABS = SyntaxFactory.TriviaList(
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab
+                );
+            }
+
+            public static class Whitespaces
+            {
+                public static readonly SyntaxTriviaList THREE_WHITE_SPACES = SyntaxFactory.TriviaList(
+                    SyntaxFactory.ElasticWhitespace(" "),
+                    SyntaxFactory.ElasticWhitespace(" "),
+                    SyntaxFactory.ElasticWhitespace(" ")
+                );
+            }
+
+            public static readonly SyntaxTrivia NEW_LINE = SyntaxFactory.CarriageReturnLineFeed;
+
         }
     }
 }

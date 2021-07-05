@@ -2,11 +2,10 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using CodeGenerator.Abstract.Generators.Modifiers;
+using CodeGenerator.Abstract.Entities;
 
-using Domain.AbstractRepositories.Modifiers;
-using Domain.Entities;
-
-namespace CodeGenerator.Generators.Mappers
+namespace CodeGenerator.Roslyn.Generators.Mappers
 {
     internal class AccessModifiersMapper : IAccessModifierMapper<SyntaxToken>
     {

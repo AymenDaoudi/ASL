@@ -3,17 +3,16 @@ using System.Linq;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Expressions;
+using CodeGenerator.Abstract.Entities.Expressions;
 
-using Domain.Entities.Expressions;
-using Domain.AbstractRepositories.Expressions;
-
-namespace CodeGenerator.Generators.Expressions
+namespace CodeGenerator.Roslyn.Generators.Expressions
 {
     public class MethodInvocationExpressionGenerator : IMethodInvocationExpressionGenerator
     {
         public IInitializedMethodInvocationExpressionGenerator Initialize(
-            ExpressionEntityBase parentExpression, 
-            string methodName, 
+            ExpressionEntityBase parentExpression,
+            string methodName,
             params string[] typeArguments
         )
         {
@@ -22,8 +21,8 @@ namespace CodeGenerator.Generators.Expressions
                 SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList<TypeSyntax>(typeArguments.Select(ta => SyntaxFactory.IdentifierName(ta)))));
 
             var memberAccess = SyntaxFactory.MemberAccessExpression(
-                SyntaxKind.SimpleMemberAccessExpression, 
-                (ExpressionSyntax)parentExpression.ExpressionRoot, 
+                SyntaxKind.SimpleMemberAccessExpression,
+                (ExpressionSyntax)parentExpression.ExpressionRoot,
                 method
             );
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeGenerator.Exceptions
+namespace CodeGenerator.Roslyn.Exceptions
 {
     public class NoOrMultipleRegisterRepositoriesMethodsException : Exception
     {

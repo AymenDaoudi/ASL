@@ -4,14 +4,13 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Modifiers;
+using CodeGenerator.Abstract.Generators.Methods;
+using CodeGenerator.Abstract.Entities.Methods;
+using CodeGenerator.Abstract.Entities.Statements;
+using CodeGenerator.Abstract.Entities;
 
-using Domain.AbstractRepositories.Methods;
-using Domain.Entities;
-using Domain.Entities.Methods;
-using Domain.Entities.Statements;
-using Domain.AbstractRepositories.Modifiers;
-
-namespace CodeGenerator.Generators.Methods
+namespace CodeGenerator.Roslyn.Generators.Methods
 {
     public class MethodGenerator : IInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>
     {
@@ -23,8 +22,8 @@ namespace CodeGenerator.Generators.Methods
         }
 
         public IInitializedMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase> Initialize(
-            string methodName, 
-            string returnTypeName, 
+            string methodName,
+            string returnTypeName,
             AccessModifiers modifiers
         )
         {
@@ -32,7 +31,7 @@ namespace CodeGenerator.Generators.Methods
             method = method.AddModifiers(_accessModifierMapper.From(modifiers));
 
             var initializedMethodGenerator = new InitializedMethodGenerator(_accessModifierMapper, method);
-            
+
             return initializedMethodGenerator;
         }
 
@@ -41,7 +40,7 @@ namespace CodeGenerator.Generators.Methods
             private readonly IAccessModifierMapper<SyntaxToken> _accessModifierMapper;
 
             public InitializedMethodGenerator(
-                IAccessModifierMapper<SyntaxToken> accessModifierMapper, 
+                IAccessModifierMapper<SyntaxToken> accessModifierMapper,
                 MethodDeclarationSyntax method
             )
             {

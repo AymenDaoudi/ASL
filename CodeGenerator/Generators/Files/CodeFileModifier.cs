@@ -7,32 +7,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using Domain.Entities.Statements;
-using Domain.AbstractRepositories.Files;
-using Domain.Entities.Files;
+using CodeGenerator.Abstract.Generators.Files;
+using CodeGenerator.Abstract.Entities.Files;
+using CodeGenerator.Abstract.Entities.Statements;
+using static CodeGenerator.Roslyn.Consts.Spaces;
+using static CodeGenerator.Roslyn.Consts.Spaces.Tabs;
+using static CodeGenerator.Roslyn.Consts.Spaces.Whitespaces;
 
-namespace CodeGenerator
+namespace CodeGenerator.Roslyn.Generators.Files
 {
     public class CodeFileModifier : ICodeFileModifier
     {
-        private readonly SyntaxTrivia _newLineTrivia = SyntaxFactory.CarriageReturnLineFeed;
-        private readonly SyntaxTriviaList _threeLeadingTabs = SyntaxFactory.TriviaList(SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab, SyntaxFactory.ElasticTab);
-
-        private readonly SyntaxTriviaList _sixTabs = SyntaxFactory.TriviaList(
-           SyntaxFactory.ElasticTab,
-           SyntaxFactory.ElasticTab,
-           SyntaxFactory.ElasticTab,
-           SyntaxFactory.ElasticTab,
-           SyntaxFactory.ElasticTab,
-           SyntaxFactory.ElasticTab
-       );
-
-        private readonly SyntaxTriviaList _threeWhiteSpaces = SyntaxFactory.TriviaList(
-            SyntaxFactory.ElasticWhitespace(" "),
-            SyntaxFactory.ElasticWhitespace(" "),
-            SyntaxFactory.ElasticWhitespace(" ")
-        );
-
         private readonly ICodeFileReader<CodeFileEntityBase> _codeFileReader;
 
         public CodeFileModifier(ICodeFileReader<CodeFileEntityBase> codeFileReader)
@@ -70,8 +55,8 @@ namespace CodeGenerator
             var newReturnStatement = SyntaxFactory
                 .ReturnStatement((ExpressionSyntax)newRturnStatement.Expression.ExpressionRoot)
                 .NormalizeWhitespace()
-                .WithLeadingTrivia(_threeLeadingTabs)
-                .WithTrailingTrivia(_newLineTrivia);
+                .WithLeadingTrivia(THREE_TABS)
+                .WithTrailingTrivia(NEW_LINE);
 
             var invocation = newReturnStatement
                 .DescendantNodes()
@@ -108,13 +93,13 @@ namespace CodeGenerator
 
         private InvocationExpressionSyntax BreakLineForInvocations(InvocationExpressionSyntax diMethodInvocationExpression)
         {
-            var hasInvocations = diMethodInvocationExpression.DescendantNodes().Any(i => i is InvocationExpressionSyntax);
+            var hasInvocations = diMethodInvocationExpression
+                .DescendantNodes()
+                .Any(i => i is InvocationExpressionSyntax);
 
             if (!hasInvocations)
             {
-                var newDiMethodInvocationExpression = diMethodInvocationExpression
-                    .NormalizeWhitespace()
-                    .WithTrailingTrivia(_newLineTrivia);
+                var newDiMethodInvocationExpression = diMethodInvocationExpression.NormalizeWhitespace();
 
                 return newDiMethodInvocationExpression;
             }
@@ -125,7 +110,7 @@ namespace CodeGenerator
                 var newDiMethodAccessExpression = diMethodAccessExpression
                     .WithOperatorToken(
                         SyntaxFactory.Token(
-                            SyntaxFactory.TriviaList(_sixTabs.Concat(_threeWhiteSpaces.AsEnumerable())),
+                            SyntaxFactory.TriviaList(new SyntaxTrivia[] { NEW_LINE }.Concat(SIX_TABS.Concat(THREE_WHITE_SPACES))),
                             SyntaxKind.DotToken,
                             SyntaxFactory.TriviaList()
                         ));
@@ -135,11 +120,6 @@ namespace CodeGenerator
                 var newDirectInvocationChild = BreakLineForInvocations(directInvocationChild);
 
                 diMethodInvocationExpression = diMethodInvocationExpression.ReplaceNode(directInvocationChild, newDirectInvocationChild);
-
-                if (!isTopInvocation)
-                {
-                    diMethodInvocationExpression = diMethodInvocationExpression.WithTrailingTrivia(_newLineTrivia);
-                }
 
                 return diMethodInvocationExpression;
             }

@@ -2,12 +2,11 @@
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Namespaces;
+using CodeGenerator.Abstract.Entities.Namespaces;
+using CodeGenerator.Abstract.Entities.Types;
 
-using Domain.AbstractRepositories.Namespaces;
-using Domain.Entities.Namespaces;
-using Domain.Entities.Types;
-
-namespace CodeGenerator.Generators.Namespaces
+namespace CodeGenerator.Roslyn.Generators.Namespaces
 {
     public class NamespaceGenerator : INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase>
     {

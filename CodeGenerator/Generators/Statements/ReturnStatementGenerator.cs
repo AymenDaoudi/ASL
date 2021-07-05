@@ -1,8 +1,8 @@
-﻿using Domain.AbstractRepositories.Statements;
-using Domain.Entities.Expressions;
-using Domain.Entities.Statements;
+﻿using CodeGenerator.Abstract.Entities.Expressions;
+using CodeGenerator.Abstract.Entities.Statements;
+using CodeGenerator.Abstract.Generators.Statements;
 
-namespace CodeGenerator.Generators.Statements
+namespace CodeGenerator.Roslyn.Generators.Statements
 {
     public class ReturnStatementGenerator : IReturnStatementGenerator<ReturnStatementEntity, ExpressionEntityBase>
     {

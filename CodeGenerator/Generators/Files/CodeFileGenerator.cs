@@ -4,12 +4,11 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Files;
+using CodeGenerator.Abstract.Entities.Namespaces;
+using CodeGenerator.Abstract.Entities.Types;
 
-using Domain.Entities.Namespaces;
-using Domain.Entities.Types;
-using Domain.AbstractRepositories.Files;
-
-namespace CodeGenerator.Generators
+namespace CodeGenerator.Roslyn.Generators.Files
 {
     public class CodeFileGenerator : ICodeFileGenerator<TypeEntityBase>
     {

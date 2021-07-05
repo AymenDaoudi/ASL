@@ -3,13 +3,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CodeGenerator.Abstract.Generators.Modifiers;
+using CodeGenerator.Abstract.Generators.Methods;
+using CodeGenerator.Abstract.Entities.Methods;
+using CodeGenerator.Abstract.Entities.Statements;
 
-using Domain.Entities.Methods;
-using Domain.Entities.Statements;
-using Domain.AbstractRepositories.Methods;
-using Domain.AbstractRepositories.Modifiers;
-
-namespace CodeGenerator.Generators.Methods
+namespace CodeGenerator.Roslyn.Generators.Methods
 {
     public class ExtensionMethodGenerator : IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>
     {
@@ -29,7 +28,7 @@ namespace CodeGenerator.Generators.Methods
         {
             var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(returnTypeName), methodName);
             method = method.AddModifiers(_accessModifierMapper.From(ExtensionMethodEntity.Modifiers));
-            
+
             var ExtendedParam = SyntaxFactory.Parameter(
                 new SyntaxList<AttributeListSyntax>(),
                 new SyntaxTokenList(SyntaxFactory.Token(SyntaxKind.ThisKeyword)),
@@ -49,7 +48,7 @@ namespace CodeGenerator.Generators.Methods
         {
             public InitializedExtensionMethodGenerator(MethodDeclarationSyntax method)
             {
-                this._method = method;
+                _method = method;
             }
 
             public IInitializedMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> SetParameters(params ParameterEntityBase[] parameters)
