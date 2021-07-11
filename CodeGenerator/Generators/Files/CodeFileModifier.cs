@@ -12,24 +12,30 @@ using CodeGenerator.Abstract.Entities.Files;
 using CodeGenerator.Abstract.Entities.Statements;
 using static CodeGenerator.Roslyn.Consts.Spaces;
 using static CodeGenerator.Roslyn.Consts.Spaces.Tabs;
-using static CodeGenerator.Roslyn.Consts.Spaces.Whitespaces;
+using CodeGenerator.Abstract.Repositories;
+using CodeGenerator.Abstract.Entities.Expressions;
 
 namespace CodeGenerator.Roslyn.Generators.Files
 {
     public class CodeFileModifier : ICodeFileModifier
     {
         private readonly ICodeFileReader<CodeFileEntityBase> _codeFileReader;
+        private readonly IExpressionRepository _expressionRepository;
 
-        public CodeFileModifier(ICodeFileReader<CodeFileEntityBase> codeFileReader)
+        public CodeFileModifier(
+            ICodeFileReader<CodeFileEntityBase> codeFileReader, 
+            IExpressionRepository expressionRepository
+        )
         {
             _codeFileReader = codeFileReader;
+            _expressionRepository = expressionRepository;
         }
 
         public async Task ReplaceReturnStatementOfMethodOfClassAsync(
             string filePath,
             string className,
             string methodName,
-            ReturnStatementEntity newRturnStatement
+            StatementEntityBase newRturnStatement
         )
         {
             var codeFile = await _codeFileReader.ReadAsync(filePath);
@@ -63,17 +69,52 @@ namespace CodeGenerator.Roslyn.Generators.Files
                 .OfType<InvocationExpressionSyntax>()
                 .First();
 
-            var newInvocation = BreakLineForInvocations(invocation);
+            var invocationEntity = new MethodInvocationExpressionEntity(invocation);
+            var newInvocation = _expressionRepository.AllignMethodsChaining(invocationEntity);
 
-            newReturnStatement = newReturnStatement.ReplaceNode(invocation, newInvocation);
+            newReturnStatement = newReturnStatement.ReplaceNode(invocation, (InvocationExpressionSyntax)newInvocation.ExpressionRoot);
 
             codeFileRoot = codeFileRoot.TrackNodes(statements.Distinct());
+
             foreach (var statement in statements)
             {
                 var currentStatement = codeFileRoot.GetCurrentNode(statement);
                 codeFileRoot = codeFileRoot.ReplaceNode(currentStatement, newReturnStatement);
             }
 
+            await SaveAsync(codeFileRoot, filePath);
+        }
+
+        public async Task AddStatementToMethodOfClassAsync(
+            string filePath,
+            string className,
+            string methodName,
+            StatementEntityBase statement
+        )
+        {
+            var codeFile = await _codeFileReader.ReadAsync(filePath);
+            var codeFileRoot = codeFile.CodeFileRoot as CompilationUnitSyntax;
+
+            var methodDeclarationSyntax = codeFileRoot
+                .DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                .Single(c => c.Identifier.ValueText == className)
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Single(m => m.Identifier.ValueText == methodName);
+
+            var lastStatementsOfMethod = methodDeclarationSyntax
+                .DescendantNodes()
+                .OfType<StatementSyntax>()
+                .LastOrDefault();
+
+            var newStatement = SyntaxFactory
+                .ExpressionStatement((InvocationExpressionSyntax)statement.Expression.ExpressionRoot)
+                .WithLeadingTrivia(new SyntaxTrivia[] { NEW_LINE }.Concat(THREE_TABS))
+                .WithTrailingTrivia(NEW_LINE);
+
+            codeFileRoot = codeFileRoot.InsertNodesAfter(lastStatementsOfMethod, new SyntaxNode[] { newStatement });
+            
             await SaveAsync(codeFileRoot, filePath);
         }
 
@@ -89,40 +130,6 @@ namespace CodeGenerator.Roslyn.Generators.Files
                     }
                 }
             });
-        }
-
-        private InvocationExpressionSyntax BreakLineForInvocations(InvocationExpressionSyntax diMethodInvocationExpression)
-        {
-            var hasInvocations = diMethodInvocationExpression
-                .DescendantNodes()
-                .Any(i => i is InvocationExpressionSyntax);
-
-            if (!hasInvocations)
-            {
-                var newDiMethodInvocationExpression = diMethodInvocationExpression.NormalizeWhitespace();
-
-                return newDiMethodInvocationExpression;
-            }
-            else
-            {
-                var isTopInvocation = diMethodInvocationExpression.Parent is ReturnStatementSyntax;
-                var diMethodAccessExpression = (MemberAccessExpressionSyntax)diMethodInvocationExpression.Expression;
-                var newDiMethodAccessExpression = diMethodAccessExpression
-                    .WithOperatorToken(
-                        SyntaxFactory.Token(
-                            SyntaxFactory.TriviaList(new SyntaxTrivia[] { NEW_LINE }.Concat(SIX_TABS.Concat(THREE_WHITE_SPACES))),
-                            SyntaxKind.DotToken,
-                            SyntaxFactory.TriviaList()
-                        ));
-
-                diMethodInvocationExpression = diMethodInvocationExpression.ReplaceNode(diMethodAccessExpression, newDiMethodAccessExpression);
-                var directInvocationChild = diMethodInvocationExpression.DescendantNodes().OfType<InvocationExpressionSyntax>().First();
-                var newDirectInvocationChild = BreakLineForInvocations(directInvocationChild);
-
-                diMethodInvocationExpression = diMethodInvocationExpression.ReplaceNode(directInvocationChild, newDirectInvocationChild);
-
-                return diMethodInvocationExpression;
-            }
         }
     }
 }

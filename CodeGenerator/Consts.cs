@@ -10,10 +10,17 @@ namespace CodeGenerator.Roslyn
             public static class Tabs
             {
                 public static readonly SyntaxTriviaList THREE_TABS = SyntaxFactory.TriviaList(
-                SyntaxFactory.ElasticTab,
-                SyntaxFactory.ElasticTab,
-                SyntaxFactory.ElasticTab
-            );
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab
+                );
+
+                public static readonly SyntaxTriviaList FOUR_TABS = SyntaxFactory.TriviaList(
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab,
+                    SyntaxFactory.ElasticTab
+                );
 
                 public static readonly SyntaxTriviaList SIX_TABS = SyntaxFactory.TriviaList(
                     SyntaxFactory.ElasticTab,

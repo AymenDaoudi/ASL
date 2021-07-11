@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
+
 using CodeGenerator.Roslyn.Generators.Expressions;
 using CodeGenerator.Roslyn.Generators.Mappers;
 using CodeGenerator.Roslyn.Generators.Methods;
@@ -21,6 +22,8 @@ using CodeGenerator.Abstract.Entities.Namespaces;
 using CodeGenerator.Abstract.Entities.Statements;
 using CodeGenerator.Abstract.Entities.Types.Classes;
 using CodeGenerator.Abstract.Entities.Types;
+using CodeGenerator.Abstract.Repositories;
+using CodeGenerator.Roslyn.Repositories;
 
 namespace CodeGenerator.Roslyn
 {
@@ -37,9 +40,10 @@ namespace CodeGenerator.Roslyn
                 .AddSingleton(typeof(INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase>), typeof(NamespaceGenerator))
                 .AddSingleton(typeof(IClassGenerator<ClassEntityBase, MethodEntityBase>), typeof(ClassGenerator))
                 .AddSingleton<IMethodRepository, MethodRepository>()
+                .AddSingleton<IExpressionRepository, ExpressionRepository>()
                 .AddSingleton(typeof(IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase>), typeof(ExtensionMethodGenerator))
                 .AddSingleton(typeof(IInstanceMethodGenerator<MethodEntityBase, StatementEntityBase, ParameterEntityBase>), typeof(MethodGenerator))
-                .AddSingleton(typeof(IReturnStatementGenerator<ReturnStatementEntity, ExpressionEntityBase>), typeof(ReturnStatementGenerator))
+                .AddSingleton(typeof(IStatementGenerator<StatementEntityBase, ExpressionEntityBase>), typeof(StatementGenerator))
                 .AddSingleton<IMethodInvocationExpressionGenerator, MethodInvocationExpressionGenerator>()
                 .AddSingleton<IObjectExpressionGenerator, ObjectExpressionGenerator>()
                 .AddSingleton(typeof(IAccessModifierMapper<SyntaxToken>), typeof(AccessModifiersMapper));
