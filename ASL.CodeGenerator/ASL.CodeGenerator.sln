@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenerator", "CodeGenerator.csproj", "{47155174-7A0B-433C-8584-A67F03BAA41A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASL.CodeGenerator", "ASL.CodeGenerator.csproj", "{1242FC71-DF0D-4ECE-80DB-34B322950A30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{47155174-7A0B-433C-8584-A67F03BAA41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47155174-7A0B-433C-8584-A67F03BAA41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47155174-7A0B-433C-8584-A67F03BAA41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47155174-7A0B-433C-8584-A67F03BAA41A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1242FC71-DF0D-4ECE-80DB-34B322950A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1242FC71-DF0D-4ECE-80DB-34B322950A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1242FC71-DF0D-4ECE-80DB-34B322950A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1242FC71-DF0D-4ECE-80DB-34B322950A30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {87E8A555-0D27-484D-98E7-E692F4890A02}
+		SolutionGuid = {9DF9412D-04F4-4BA1-AA4E-690BB0B36079}
 	EndGlobalSection
 EndGlobal
