@@ -7,13 +7,13 @@ using CSCG.Abstract.Generators.Files;
 using CSCG.Abstract.Generators.Statements;
 using static ASL.CodeGenerator.Consts;
 
-namespace Services
+namespace ASL.CodeGenerator
 {
     public class StartupClassService
     {
         private const string STARTUP = "Startup";
         private const string CONFIGURE_SERVICE = "ConfigureServices";
-        
+
         private readonly ICodeFileModifier _classModifier;
         private readonly IObjectExpressionGenerator _objectExpressionGenerator;
         private readonly IMethodInvocationExpressionGenerator _methodInvocationExpressionGenerator;
@@ -46,9 +46,9 @@ namespace Services
             var registerRepositoriesMethodInvocationStatement = _statementGenerator.Generate(registerRepositoriesMethodInvocationExpression);
 
             await _classModifier.AddStatementToMethodOfClassAsync(
-                filePath: filePath, 
-                className: STARTUP, 
-                methodName: CONFIGURE_SERVICE, 
+                filePath: filePath,
+                className: STARTUP,
+                methodName: CONFIGURE_SERVICE,
                 statement: registerRepositoriesMethodInvocationStatement
             );
         }

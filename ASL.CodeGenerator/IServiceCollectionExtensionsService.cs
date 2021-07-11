@@ -1,4 +1,4 @@
-﻿namespace Services
+﻿namespace ASL.CodeGenerator
 {
     public interface IServiceCollectionExtensionsService
     {

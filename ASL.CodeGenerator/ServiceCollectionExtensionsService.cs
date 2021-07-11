@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using ASL.CodeGenerator.Exceptions;
 using CSCG.Abstract.Generators.Types.Classes;
 using CSCG.Abstract.Generators.Statements;
 using CSCG.Abstract.Generators.Namespaces;
@@ -20,10 +21,9 @@ using CSCG.Abstract.Entities.Types;
 using CSCG.Abstract.Entities;
 using CSCG.Abstract.Repositories;
 using CSCG.Roslyn.Exceptions;
-using ASL.CodeGenerator.Exceptions;
 using static ASL.CodeGenerator.Consts;
 
-namespace Services
+namespace ASL.CodeGenerator
 {
     public class ServiceCollectionExtensionsService : IServiceCollectionExtensionsService
     {
@@ -31,7 +31,7 @@ namespace Services
         private const string ADD_SCOPED = "AddScoped";
         private const string ADD_TRANSIENT = "AddTransient";
         private const string ADD_SINGLETON = "AddSingleton";
-        
+
         private readonly ICodeFileModifier _classModifier;
         private readonly IClassGenerator<ClassEntityBase, MethodEntityBase> _classGenerator;
         private readonly INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> _namespaceGenerator;
@@ -126,10 +126,10 @@ namespace Services
         )
         {
             return AddDiMethodToReturnStatementAsync(
-                filePath, 
-                dILifeTime, 
-                REGISTER_SERVICES, 
-                abstractTypeName, 
+                filePath,
+                dILifeTime,
+                REGISTER_SERVICES,
+                abstractTypeName,
                 ImplementationTypeName
             );
         }
@@ -142,9 +142,9 @@ namespace Services
         {
 
             return AddDiMethodToReturnStatementAsync(
-                filePath, 
-                dILifeTime, 
-                REGISTER_SERVICES, 
+                filePath,
+                dILifeTime,
+                REGISTER_SERVICES,
                 ImplementationTypeName
             );
         }

@@ -2,7 +2,7 @@
 
 using CSCG.Roslyn;
 
-namespace Services
+namespace ASL.CodeGenerator
 {
     public class Startup
     {
@@ -10,7 +10,7 @@ namespace Services
 
         static Startup()
         {
-            Services = (Setup.Services ?? new ServiceCollection());
+            Services = Setup.Services ?? new ServiceCollection();
         }
     }
 }
