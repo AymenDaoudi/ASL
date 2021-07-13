@@ -9,7 +9,7 @@ using static ASL.CodeGenerator.Consts;
 
 namespace ASL.CodeGenerator
 {
-    public class StartupClassService
+    public class StartupClassService : IStartupClassService
     {
         private const string STARTUP = "Startup";
         private const string CONFIGURE_SERVICE = "ConfigureServices";

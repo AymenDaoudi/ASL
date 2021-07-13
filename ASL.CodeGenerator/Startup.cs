@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using CSCG.Roslyn;
-
 namespace ASL.CodeGenerator
 {
     public class Startup
@@ -10,7 +8,14 @@ namespace ASL.CodeGenerator
 
         static Startup()
         {
-            Services = Setup.Services ?? new ServiceCollection();
+            Services = CSCG.Roslyn.Setup.Services?
+                    .AddSingleton<IServiceCollectionExtensionsService, ServiceCollectionExtensionsService>()
+                    .AddSingleton<IStartupClassService, StartupClassService>()
+                    .AddSingleton<IServicesService, ServicesService>() ?? 
+                new ServiceCollection()
+                    .AddSingleton<IServiceCollectionExtensionsService, ServiceCollectionExtensionsService>()
+                    .AddSingleton<IStartupClassService, StartupClassService>()
+                    .AddSingleton<IServicesService, ServicesService>();
         }
     }
 }

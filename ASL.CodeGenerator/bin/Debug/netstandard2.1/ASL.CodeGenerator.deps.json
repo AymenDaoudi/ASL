@@ -9,30 +9,30 @@
     ".NETStandard,Version=v2.1/": {
       "ASL.CodeGenerator/1.0.0": {
         "dependencies": {
-          "CSCG.Roslyn": "0.0.3"
+          "CSCG.Roslyn": "0.1.1"
         },
         "runtime": {
           "ASL.CodeGenerator.dll": {}
         }
       },
-      "CSCG.Abstract/0.0.12": {
+      "CSCG.Abstract/0.2.3": {
         "runtime": {
           "lib/netstandard2.1/CSCG.Abstract.dll": {
-            "assemblyVersion": "0.0.12.0",
-            "fileVersion": "0.0.12.0"
+            "assemblyVersion": "0.2.3.0",
+            "fileVersion": "0.2.3.0"
           }
         }
       },
-      "CSCG.Roslyn/0.0.3": {
+      "CSCG.Roslyn/0.1.1": {
         "dependencies": {
-          "CSCG.Abstract": "0.0.12",
+          "CSCG.Abstract": "0.2.3",
           "Microsoft.CodeAnalysis.CSharp": "3.10.0",
           "Microsoft.Extensions.DependencyInjection": "5.0.1"
         },
         "runtime": {
           "lib/netstandard2.1/CSCG.Roslyn.dll": {
-            "assemblyVersion": "0.0.3.0",
-            "fileVersion": "0.0.3.0"
+            "assemblyVersion": "0.1.1.0",
+            "fileVersion": "0.1.1.0"
           }
         }
       },
@@ -255,19 +255,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "CSCG.Abstract/0.0.12": {
+    "CSCG.Abstract/0.2.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Wu8m9m5lTi8Q8tOBDB/KoVmQm2b9yrOhsgjlI2sMvIibGIx+P7IHyk6D0zecE4rZD6w0L2/ovATNot1A/hBFuQ==",
-      "path": "cscg.abstract/0.0.12",
-      "hashPath": "cscg.abstract.0.0.12.nupkg.sha512"
+      "sha512": "sha512-m9eIyxQlxtEoYzRBDvB9WCUJLoRe3CvaVB2Ozd83nO/REVwifDDrKY66DrYqnr3QTegrheDwZxcY6XLtvsb2hg==",
+      "path": "cscg.abstract/0.2.3",
+      "hashPath": "cscg.abstract.0.2.3.nupkg.sha512"
     },
-    "CSCG.Roslyn/0.0.3": {
+    "CSCG.Roslyn/0.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OZ/pG8FgwPLjDUpDkLyT2ymD0dbGRlcngLw6Bbph2gwzjB/NCpHnk4FH4ejkHuOZZIuxjtC8H1hElh8TOoTdAA==",
-      "path": "cscg.roslyn/0.0.3",
-      "hashPath": "cscg.roslyn.0.0.3.nupkg.sha512"
+      "sha512": "sha512-OOmSrBsLCOJTeBLnjT94qcmHkQhqHaxNMzErqulUPongEXPLSzIfm6+6YU+Lme9niaGVvaltPaZSsgCOSxTe4A==",
+      "path": "cscg.roslyn/0.1.1",
+      "hashPath": "cscg.roslyn.0.1.1.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.Analyzers/3.3.2": {
       "type": "package",

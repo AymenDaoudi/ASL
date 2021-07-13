@@ -6,3 +6,4 @@ C:\Users\aymen.daoudi\source\Personal Repos\ASL\ASL.CodeGenerator\bin\Debug\nets
 C:\Users\aymen.daoudi\source\Personal Repos\ASL\ASL.CodeGenerator\bin\Debug\netstandard2.1\ASL.CodeGenerator.pdb
 C:\Users\aymen.daoudi\source\Personal Repos\ASL\ASL.CodeGenerator\obj\Debug\netstandard2.1\ASL.CodeGenerator.dll
 C:\Users\aymen.daoudi\source\Personal Repos\ASL\ASL.CodeGenerator\obj\Debug\netstandard2.1\ASL.CodeGenerator.pdb
+C:\Users\aymen.daoudi\source\Personal Repos\ASL\ASL.CodeGenerator\obj\Debug\netstandard2.1\ASL.CodeGenerator.csproj.AssemblyReference.cache

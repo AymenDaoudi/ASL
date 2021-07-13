@@ -14,6 +14,7 @@ using CSCG.Abstract.Generators.Expressions;
 using CSCG.Abstract.Entities.Expressions;
 using CSCG.Abstract.Entities.Files;
 using CSCG.Abstract.Entities.Methods;
+using CSCG.Abstract.Entities.Methods.Classes;
 using CSCG.Abstract.Entities.Namespaces;
 using CSCG.Abstract.Entities.Statements;
 using CSCG.Abstract.Entities.Types.Classes;
@@ -33,7 +34,7 @@ namespace ASL.CodeGenerator
         private const string ADD_SINGLETON = "AddSingleton";
 
         private readonly ICodeFileModifier _classModifier;
-        private readonly IClassGenerator<ClassEntityBase, MethodEntityBase> _classGenerator;
+        private readonly IClassGenerator<ClassEntityBase, ClassMethodEntity> _classGenerator;
         private readonly INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> _namespaceGenerator;
         private readonly ICodeFileGenerator<TypeEntityBase> _codeFileGenerator;
         private readonly IMethodRepository _methodRepository;
@@ -45,7 +46,7 @@ namespace ASL.CodeGenerator
 
         public ServiceCollectionExtensionsService(
             ICodeFileModifier classModifier,
-            IClassGenerator<ClassEntityBase, MethodEntityBase> classGenerator,
+            IClassGenerator<ClassEntityBase, ClassMethodEntity> classGenerator,
             INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> namespaceGenerator,
             ICodeFileGenerator<TypeEntityBase> codeFileGenerator,
             IMethodRepository methodRepository,

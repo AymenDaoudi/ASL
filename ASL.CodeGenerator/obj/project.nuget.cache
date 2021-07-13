@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "1VZKxdM1WGDSLfMD9vI8v34lsIXbGViFhmBkSGY7lz2xp+yAP4rKibVXGYe6qRqeJGrUg6rYzlaiVC53zUG2DQ==",
+  "dgSpecHash": "Fb8pg1V2MmFbWD7Jo2diKwebrVLxrjEYCaHG/PM1rLbkgD6cymhEryi/vFURCam2qybXhtFYlZi5mOjCYc1WVw==",
   "success": true,
   "projectFilePath": "C:\\Users\\aymen.daoudi\\source\\Personal Repos\\ASL\\ASL.CodeGenerator\\ASL.CodeGenerator.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\aymen.daoudi\\.nuget\\packages\\cscg.abstract\\0.0.12\\cscg.abstract.0.0.12.nupkg.sha512",
-    "C:\\Users\\aymen.daoudi\\.nuget\\packages\\cscg.roslyn\\0.0.3\\cscg.roslyn.0.0.3.nupkg.sha512",
+    "C:\\Users\\aymen.daoudi\\.nuget\\packages\\cscg.abstract\\0.2.3\\cscg.abstract.0.2.3.nupkg.sha512",
+    "C:\\Users\\aymen.daoudi\\.nuget\\packages\\cscg.roslyn\\0.1.1\\cscg.roslyn.0.1.1.nupkg.sha512",
     "C:\\Users\\aymen.daoudi\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.2\\microsoft.codeanalysis.analyzers.3.3.2.nupkg.sha512",
     "C:\\Users\\aymen.daoudi\\.nuget\\packages\\microsoft.codeanalysis.common\\3.10.0\\microsoft.codeanalysis.common.3.10.0.nupkg.sha512",
     "C:\\Users\\aymen.daoudi\\.nuget\\packages\\microsoft.codeanalysis.csharp\\3.10.0\\microsoft.codeanalysis.csharp.3.10.0.nupkg.sha512",

@@ -45,7 +45,7 @@
           "dependencies": {
             "CSCG.Roslyn": {
               "target": "Package",
-              "version": "[0.0.3, )"
+              "version": "[0.1.1, )"
             }
           },
           "imports": [

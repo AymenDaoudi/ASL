@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.1": {
-      "CSCG.Abstract/0.0.12": {
+      "CSCG.Abstract/0.2.3": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/CSCG.Abstract.dll": {}
@@ -11,10 +11,10 @@
           "lib/netstandard2.1/CSCG.Abstract.dll": {}
         }
       },
-      "CSCG.Roslyn/0.0.3": {
+      "CSCG.Roslyn/0.1.1": {
         "type": "package",
         "dependencies": {
-          "CSCG.Abstract": "0.0.12",
+          "CSCG.Abstract": "0.2.3",
           "Microsoft.CodeAnalysis.CSharp": "3.10.0",
           "Microsoft.Extensions.DependencyInjection": "5.0.1"
         },
@@ -262,27 +262,27 @@
     }
   },
   "libraries": {
-    "CSCG.Abstract/0.0.12": {
-      "sha512": "Wu8m9m5lTi8Q8tOBDB/KoVmQm2b9yrOhsgjlI2sMvIibGIx+P7IHyk6D0zecE4rZD6w0L2/ovATNot1A/hBFuQ==",
+    "CSCG.Abstract/0.2.3": {
+      "sha512": "m9eIyxQlxtEoYzRBDvB9WCUJLoRe3CvaVB2Ozd83nO/REVwifDDrKY66DrYqnr3QTegrheDwZxcY6XLtvsb2hg==",
       "type": "package",
-      "path": "cscg.abstract/0.0.12",
+      "path": "cscg.abstract/0.2.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "cscg.abstract.0.0.12.nupkg.sha512",
+        "cscg.abstract.0.2.3.nupkg.sha512",
         "cscg.abstract.nuspec",
         "lib/netstandard2.1/CSCG.Abstract.deps.json",
         "lib/netstandard2.1/CSCG.Abstract.dll"
       ]
     },
-    "CSCG.Roslyn/0.0.3": {
-      "sha512": "OZ/pG8FgwPLjDUpDkLyT2ymD0dbGRlcngLw6Bbph2gwzjB/NCpHnk4FH4ejkHuOZZIuxjtC8H1hElh8TOoTdAA==",
+    "CSCG.Roslyn/0.1.1": {
+      "sha512": "OOmSrBsLCOJTeBLnjT94qcmHkQhqHaxNMzErqulUPongEXPLSzIfm6+6YU+Lme9niaGVvaltPaZSsgCOSxTe4A==",
       "type": "package",
-      "path": "cscg.roslyn/0.0.3",
+      "path": "cscg.roslyn/0.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "cscg.roslyn.0.0.3.nupkg.sha512",
+        "cscg.roslyn.0.1.1.nupkg.sha512",
         "cscg.roslyn.nuspec",
         "lib/netstandard2.1/CSCG.Roslyn.deps.json",
         "lib/netstandard2.1/CSCG.Roslyn.dll"
@@ -786,7 +786,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.1": [
-      "CSCG.Roslyn >= 0.0.3"
+      "CSCG.Roslyn >= 0.1.1"
     ]
   },
   "packageFolders": {
@@ -833,7 +833,7 @@
         "dependencies": {
           "CSCG.Roslyn": {
             "target": "Package",
-            "version": "[0.0.3, )"
+            "version": "[0.1.1, )"
           }
         },
         "imports": [
