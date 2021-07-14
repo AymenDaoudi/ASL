@@ -25,4 +25,4 @@ jobs:
     - name: Pack
       run: dotnet pack ASL.CodeGenerator/ASL.CodeGenerator.csproj -p:NuspecFile=ASL.CodeGenerator.nuspec -p:NuspecProperties="version=1.0.2" --configuration Release --include-symbols --no-build --no-restore --output .
     - name: PushNuget
-      run: dotnet nuget push *.nupkg --source Nuget.org --api-key ${{secrets.PUBLISHASL_CODE_GENERATOR_TO_NUGET_ORG}}
+      run: dotnet nuget push *.nupkg --source Nuget.org --api-key ${{secrets.PUBLISHASL_CODE_GENERATOR_TO_NUGET_ORG}} --skip-duplicate
