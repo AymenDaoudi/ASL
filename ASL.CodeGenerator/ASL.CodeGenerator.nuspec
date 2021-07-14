@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>ASL.CodeGenerator</id>
+    <id>ASL.CodeGenerationLibrary</id>
     <version>$version$</version>
     <title>ASL CodeGenerator</title>
     <authors>AymenDaoudi</authors>
