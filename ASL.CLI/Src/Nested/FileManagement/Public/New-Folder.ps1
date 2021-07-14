@@ -12,7 +12,13 @@
         $LocationExists = Test-Path -Path $Location -PathType Container
 
         if (-Not $LocationExists) {
-            Write-Error("No such directory : $Location") -ErrorAction Stop
+            throw [System.IO.DirectoryNotFoundException] "No such directory: $Location."
+        }
+
+        $FolderAlreadyExists = Test-Path -Path "$Location\$Name" -PathType Container
+
+        if ($FolderAlreadyExists) {
+            throw [System.IO.IOException] "Folder: $Location\$Name already exists."
         }
     }
     process
