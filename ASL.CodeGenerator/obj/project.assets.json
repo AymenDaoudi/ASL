@@ -793,7 +793,7 @@
     "C:\\Users\\aymen.daoudi\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "restore": {
       "projectUniqueName": "C:\\Users\\aymen.daoudi\\source\\Personal Repos\\ASL\\ASL.CodeGenerator\\ASL.CodeGenerator.csproj",
       "projectName": "ASL.CodeGenerator",
