@@ -1,0 +1,25 @@
+name: ASL.CodeGenerator.CI
+
+on:
+  push:
+    paths: [ ASL.CodeGenerator/**, .github/workflows/ASL.CodeGenerator.CI.yml ]
+    branches: [ main, feature/* ]
+  pull_request:
+    paths: [ ASL.CodeGenerator/**, .github/workflows/ASL.CodeGenerator.CI.yml ]
+    branches: [ main, feature/* ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore ASL.CodeGenerator/ASL.CodeGenerator.csproj
+    - name: Build
+      run: dotnet build ASL.CodeGenerator/ASL.CodeGenerator.csproj --no-restore

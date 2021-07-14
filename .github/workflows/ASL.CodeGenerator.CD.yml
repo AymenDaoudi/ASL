@@ -1,0 +1,28 @@
+name: ASL.CodeGenerator.CD
+
+on:
+  workflow_run:
+    workflows: ["ASL.CodeGenerator.CI"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore ASL.CodeGenerator/ASL.CodeGenerator.csproj
+    - name: Build
+      run: dotnet build ASL.CodeGenerator/ASL.CodeGenerator.csproj --configuration Release --no-restore
+    - name: Pack
+      run: dotnet pack ASL.CodeGenerator/ASL.CodeGenerator.csproj -p:NuspecFile=ASL.CodeGenerator.nuspec -p:NuspecProperties="version=1.0.0" --configuration Release --include-symbols --no-build --no-restore --output .
+    - name: PushNuget
+      run: dotnet nuget push *.nupkg --source Nuget.org --api-key ${{secrets.PUBLISH_TO_NUGET_ORG}} --skip-duplicate
