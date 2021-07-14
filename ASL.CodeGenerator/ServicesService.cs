@@ -1,4 +1,6 @@
-﻿using CSCG.Abstract.Entities;
+﻿using System.IO;
+
+using CSCG.Abstract.Entities;
 using CSCG.Abstract.Entities.Methods.Classes;
 using CSCG.Abstract.Entities.Methods.Interfaces;
 using CSCG.Abstract.Entities.Namespaces;
@@ -9,27 +11,29 @@ using CSCG.Abstract.Generators.Files;
 using CSCG.Abstract.Generators.Namespaces;
 using CSCG.Abstract.Generators.Types.Classes;
 using CSCG.Abstract.Generators.Types.Interfaces;
-using System.IO;
+using static ASL.CodeGenerator.Consts;
 
 namespace ASL.CodeGenerator
 {
     public class ServicesService : IServicesService
     {
-        private readonly IServiceCollectionExtensionsService _serviceCollectionExtensionsService;
+        private const string I = "I";
+        private const string CS_EXTENSION = ".cs";
+        private const string SERVICE = "Service";
+        private const string REPOSITORY = "Repository";
+
         private readonly IClassGenerator<ClassEntityBase, ClassMethodEntity> _classGenerator;
         private readonly IInterfaceGenerator<InterfaceEntityBase, InterfaceMethodEntity> _interfaceGenerator;
         private readonly INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> _namespaceGenerator;
         private readonly ICodeFileGenerator<TypeEntityBase> _codeFileGenerator;
 
         public ServicesService(
-            IServiceCollectionExtensionsService serviceCollectionExtensionsService,
             IClassGenerator<ClassEntityBase, ClassMethodEntity> classGenerator,
             IInterfaceGenerator<InterfaceEntityBase, InterfaceMethodEntity> interfaceGenerator,
             INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> namespaceGenerator,
             ICodeFileGenerator<TypeEntityBase> codeFileGenerator
         )
         {
-            _serviceCollectionExtensionsService = serviceCollectionExtensionsService;
             _classGenerator = classGenerator;
             _interfaceGenerator = interfaceGenerator;
             _namespaceGenerator = namespaceGenerator;
@@ -47,11 +51,11 @@ namespace ASL.CodeGenerator
         {
             if (isRepository)
             {
-                name += "Repository";
+                name += SERVICE;
             }
             else
             {
-                name += "Service";
+                name += REPOSITORY;
             }
 
             var modifiers = AccessModifiers.Public;
@@ -60,7 +64,7 @@ namespace ASL.CodeGenerator
 
             if ((interfacePath != null) && (namespaceInterface != null))
             {
-                var interfaceName = string.Concat("I", name);
+                var interfaceName = string.Concat(I, name);
 
                 var @interface = _interfaceGenerator
                     .Initialize(interfaceName, modifiers)
@@ -70,9 +74,9 @@ namespace ASL.CodeGenerator
                 .SetMemebers(@interface)
                 .Generate();
 
-                interfacePath = Path.Combine(interfacePath, interfaceName + ".cs" );
+                interfacePath = Path.Combine(interfacePath, interfaceName + CS_EXTENSION);
 
-                _codeFileGenerator.CreateFile(interfacePath, interfaceNamespace, "System");
+                _codeFileGenerator.CreateFile(interfacePath, interfaceNamespace, SYSTEM);
 
                 @class = _classGenerator
                     .Initialize(className: name, modifiers)
@@ -91,9 +95,9 @@ namespace ASL.CodeGenerator
                 .SetMemebers(@class)
                 .Generate();
 
-            path = Path.Combine(path, name + ".cs");
+            path = Path.Combine(path, name + CS_EXTENSION);
 
-            _codeFileGenerator.CreateFile(path, @namespace, "System");
+            _codeFileGenerator.CreateFile(path, @namespace, SYSTEM);
         }
     }
 }
