@@ -11,12 +11,14 @@ function Install-Dependencies {
     }
     process
     {
-        try {
-            Write-Host "Installing Nuget package provider if not installed.";
-            $NugetPackageProvider = Get-PackageProvider -Name NuGet | Install-PackageProvider -Force
+        $NugetPackagepRovider = Get-PackageProvider -Name NuGet
+
+        if (-Not $NugetPackagepRovider) {
+            Write-Host "Installing Nuget package provider...";
+            Install-PackageProvider $NugetPackagepRovider.Name -Force
         }
-        catch [Exception]{
-            Write-Host "$($_.Exception.Message)";
+        else {
+            Write-Host "Nuget package provider already installed.";
         }
 
         $NugetPackageSource = Get-PackageSource -ProviderName NuGet | where {$_.Location -eq "https://www.nuget.org/api/v2"}
@@ -28,6 +30,13 @@ function Install-Dependencies {
         }
         else {
             Write-Host "Package source: https://www.nuget.org/api/v2, already registered.";
+        }
+
+        $DepdendenciesFolder = Get-ChildItem -Path $InstallationFolder | where { $_.Name -eq "Dependencies"}
+
+        if ($DepdendenciesFolder) {
+            Write-Host "Dependencies already installed."
+            Exit
         }
 
         $DepdendenciesFolder = New-Item -ItemType Directory -Path $InstallationFolder -Name Dependencies
