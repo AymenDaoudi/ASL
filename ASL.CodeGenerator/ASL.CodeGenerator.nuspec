@@ -15,7 +15,7 @@
     <tags>CodeGeneration CSharp .net asp.net webapi</tags>
     <dependencies>
       <group targetFramework="netstandard2.1">
-        <dependency id="CSCG.Roslyn" version="0.1.3"/>
+        <dependency id="CSCG.Roslyn" version="0.1.4"/>
         <dependency id="Microsoft.Extensions.DependencyInjection" version="5.0.1"/>
         <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="5.0.0"/>
       </group>
