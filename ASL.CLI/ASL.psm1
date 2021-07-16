@@ -19,3 +19,5 @@ Foreach($import in @($Private + $Public))
 # Be sure to list each exported functions in the FunctionsToExport field of the module manifest file.
 # This improves performance of command discovery in PowerShell.
 Export-ModuleMember -Function @($Public).Basename
+
+Install-Dependencies -InstallationFolder $PSScriptRoot
