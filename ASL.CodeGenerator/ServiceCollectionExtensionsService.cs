@@ -39,7 +39,7 @@ namespace ASL.CodeGenerator
         private readonly ICodeFileGenerator<TypeEntityBase> _codeFileGenerator;
         private readonly IMethodRepository _methodRepository;
         private readonly ICodeFileReader<CodeFileEntityBase> _codeFileReader;
-        private readonly IStatementGenerator<StatementEntityBase, ExpressionEntityBase> _statementGenerator;
+        private readonly IStatementGenerator<ReturnStatementEntity, ExpressionEntityBase> _returnStatementGenerator;
         private readonly IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> _extensionMethodGenerator;
         private readonly IObjectExpressionGenerator _objectExpressionGenerator;
         private readonly IMethodInvocationExpressionGenerator _methodInvocationExpressionGenerator;
@@ -51,7 +51,7 @@ namespace ASL.CodeGenerator
             ICodeFileGenerator<TypeEntityBase> codeFileGenerator,
             IMethodRepository methodRepository,
             ICodeFileReader<CodeFileEntityBase> codeFileReader,
-            IStatementGenerator<StatementEntityBase, ExpressionEntityBase> statementGenerator,
+            IStatementGenerator<ReturnStatementEntity, ExpressionEntityBase> returnStatementGenerator,
             IExtensionMethodGenerator<ExtensionMethodEntity, StatementEntityBase, ParameterEntityBase> extensionMethodGenerator,
             IObjectExpressionGenerator objectExpressionGenerator,
             IMethodInvocationExpressionGenerator methodInvocationExpression
@@ -63,7 +63,7 @@ namespace ASL.CodeGenerator
             _codeFileGenerator = codeFileGenerator;
             _methodRepository = methodRepository;
             _codeFileReader = codeFileReader;
-            _statementGenerator = statementGenerator;
+            _returnStatementGenerator = returnStatementGenerator;
             _extensionMethodGenerator = extensionMethodGenerator;
             _objectExpressionGenerator = objectExpressionGenerator;
             _methodInvocationExpressionGenerator = methodInvocationExpression;
@@ -188,7 +188,7 @@ namespace ASL.CodeGenerator
                 types
             ).Generate();
 
-            var newRturnStatement = _statementGenerator.Generate(methodInvocationExpression);
+            var newRturnStatement = _returnStatementGenerator.Generate(methodInvocationExpression);
 
             await _classModifier.ReplaceReturnStatementOfMethodOfClassAsync(
                 filePath,
@@ -204,7 +204,7 @@ namespace ASL.CodeGenerator
                 .Initialize(SERVICES)
                 .Generate();
 
-            var returnStatement = _statementGenerator.Generate(objectExpression);
+            var returnStatement = _returnStatementGenerator.Generate(objectExpression);
 
             var registerRepositoriesMethod = _extensionMethodGenerator
                 .Initialize(
