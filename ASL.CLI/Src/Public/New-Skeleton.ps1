@@ -11,6 +11,7 @@ function New-Skeleton {
 
     begin
     {
+        Use-Depedencies -location "$PSScriptRoot\Dependencies"
     }
     process
     {
@@ -54,6 +55,8 @@ function New-Skeleton {
             Remove-Item "$SolutionLocation" -Recurse
             Break
         }
+
+        New-ServiceCollectionExtensionsClass -location "$SolutionLocation\$SolutionName.Api\IServiceCollectionExtensions.cs"
 
         # Reference Service project in WebApi project
         Write-Verbose "Referencing Services project in Api project..."

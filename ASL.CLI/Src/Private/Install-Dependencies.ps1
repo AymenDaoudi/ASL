@@ -42,27 +42,20 @@ function Install-Dependencies {
         $DepdendenciesFolder = New-Item -ItemType Directory -Path $InstallationFolder -Name Dependencies
 
         Write-Host "Downloading dependencies ...";
-        Find-Package -Name ApiSecriptingLibrary.CodeGenerator -Source $NugetPackageSource.Name | Install-Package -Scope CurrentUser -Destination $DepdendenciesFolder -Force
-
-        $DotnetStandardFolders = Get-ChildItem -Recurse $DepdendenciesFolder | where { $_.PSIsContainer } | where {$_.Name -contains "netstandard2.1"}
+        Find-Package -Name ApiSecriptingLibrary.CodeGenerator -Source $NugetPackageSource.Name | Install-Package -Scope CurrentUser -SkipDependencies -Destination $DepdendenciesFolder -Force
 
         Write-Host "Installing dependencies ...";
-        Foreach($folder in $DotnetStandardFolders)
+        Try
         {
-            Try
+            $dlls = Get-ChildItem -File -Recurse $DepdendenciesFolder | where {$_ -like "*.dll"}
+            Foreach($dll in $dlls)
             {
-                $dlls = Get-ChildItem -Recurse $folder | where {! $_.PSIsContainer } | where {$_ -like "*.dll"}
-
-                Foreach($dll in $dlls)
-                {
-                    Move-Item -Path $dll -Destination $DepdendenciesFolder
-                }
-
+                Move-Item -Path $dll -Destination $DepdendenciesFolder
             }
-            Catch
-            {
-                Write-Error -Message "Failed to Installing dependency: $_"
-            }
+        }
+        Catch
+        {
+            Write-Error -Message "Failed to Installing dependency: $_"
         }
 
         Get-ChildItem $DepdendenciesFolder -Directory | Remove-Item -Recurse -Force
