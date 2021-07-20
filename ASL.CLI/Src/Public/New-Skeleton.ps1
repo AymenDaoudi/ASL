@@ -57,6 +57,7 @@ function New-Skeleton {
         }
 
         New-ServiceCollectionExtensionsClass -location "$SolutionLocation\$SolutionName.Api\IServiceCollectionExtensions.cs" -namespace "$SolutionName.Api"
+        Add-DISettings -StartupFilePath "$SolutionLocation\$SolutionName.Api\Startup.cs"
 
         # Reference Service project in WebApi project
         Write-Verbose "Referencing Services project in Api project..."
