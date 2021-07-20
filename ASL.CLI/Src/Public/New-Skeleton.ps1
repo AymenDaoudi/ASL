@@ -56,7 +56,7 @@ function New-Skeleton {
             Break
         }
 
-        New-ServiceCollectionExtensionsClass -location "$SolutionLocation\$SolutionName.Api\IServiceCollectionExtensions.cs"
+        New-ServiceCollectionExtensionsClass -location "$SolutionLocation\$SolutionName.Api\IServiceCollectionExtensions.cs" -namespace "$SolutionName.Api"
 
         # Reference Service project in WebApi project
         Write-Verbose "Referencing Services project in Api project..."

@@ -18,7 +18,7 @@
         $Type = [type]"ASL.CodeGenerator.IServiceCollectionExtensionsService"
         $ServiceCollectionExtensionsService = Resolve-DIService $ServiceProvider $Type
 
-        $ServiceCollectionExtensionsService.CreateFile($location, $namespace, "System", "Microsoft.Extensions.DependencyInjection")
+        $ServiceCollectionExtensionsService.CreateFile($location, $namespace, "Microsoft.Extensions.DependencyInjection")
     }
     end
     {
