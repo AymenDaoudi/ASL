@@ -14,6 +14,8 @@ Changes are expected at any time.
 CSCG.Roslyn and CSCG.Abstract are available for experimentation on Nuget.
 
 CSCG Github repo : https://github.com/AymenDaoudi/CSCG
+
 CSCG.Abstract on nuget : https://www.nuget.org/packages/CSCG.Abstract/
+
 CSCG.Roslyn on nuget : https://www.nuget.org/packages/CSCG.Roslyn/
 
