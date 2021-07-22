@@ -49,7 +49,7 @@ namespace ASL.CodeGenerator
             bool isRepository = false
         )
         {
-            if (isRepository)
+            if (!isRepository)
             {
                 name += SERVICE;
             }
