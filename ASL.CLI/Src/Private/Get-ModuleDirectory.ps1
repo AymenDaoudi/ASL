@@ -1,7 +1,7 @@
 ﻿function Get-ModuleDirectory {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$false)]
         [ValidateNotNullOrEmpty()]
         [string] $ModuleName = "ASL"
     )
