@@ -13,14 +13,11 @@ using CSCG.Abstract.Generators.Types.Classes;
 using CSCG.Abstract.Generators.Types.Interfaces;
 using static ASL.CodeGenerator.Consts;
 
-namespace ASL.CodeGenerator
+namespace ASL.CodeGenerator.Services
 {
     public class ServicesService : IServicesService
     {
-        private const string I = "I";
-        private const string CS_EXTENSION = ".cs";
         private const string SERVICE = "Service";
-        private const string REPOSITORY = "Repository";
 
         private readonly IClassGenerator<ClassEntityBase, ClassMethodEntity> _classGenerator;
         private readonly IInterfaceGenerator<InterfaceEntityBase, InterfaceMethodEntity> _interfaceGenerator;
@@ -40,43 +37,33 @@ namespace ASL.CodeGenerator
             _codeFileGenerator = codeFileGenerator;
         }
 
-        public void CreateService(
+        public void Create(
+            string name,
             string path,
             string namespaceName,
-            string name,
-            string interfacePath = null,
-            string namespaceInterface = null,
-            bool isRepository = false
+            string interfaceName = null,
+            params string[] usings
         )
         {
-            if (!isRepository)
+            if (!name.EndsWith(SERVICE))
             {
                 name += SERVICE;
             }
-            else
+
+            if ((!interfaceName.StartsWith(I)) && (!interfaceName.EndsWith(SERVICE)))
             {
-                name += REPOSITORY;
+                interfaceName = string.Concat(I, interfaceName, SERVICE);
             }
 
             var modifiers = AccessModifiers.Public;
 
             ClassEntityBase @class;
 
-            if ((interfacePath != null) && (namespaceInterface != null))
+            if (interfaceName != null)
             {
-                var interfaceName = string.Concat(I, name);
-
                 var @interface = _interfaceGenerator
                     .Initialize(interfaceName, modifiers)
                     .Generate();
-
-                var interfaceNamespace = _namespaceGenerator.Initialize(namespaceInterface)
-                .SetMemebers(@interface)
-                .Generate();
-
-                interfacePath = Path.Combine(interfacePath, interfaceName + CS_EXTENSION);
-
-                _codeFileGenerator.CreateFile(interfacePath, interfaceNamespace, SYSTEM);
 
                 @class = _classGenerator
                     .Initialize(className: name, modifiers)
@@ -97,7 +84,35 @@ namespace ASL.CodeGenerator
 
             path = Path.Combine(path, name + CS_EXTENSION);
 
-            _codeFileGenerator.CreateFile(path, @namespace, SYSTEM);
+            _codeFileGenerator.CreateFile(path, @namespace, usings);
+        }
+
+        public void CreateInterface(
+            string name,
+            string path,
+            string namespaceName,
+            params string[] usings
+        )
+        {
+            if ((!name.StartsWith(I)) && (!name.EndsWith(SERVICE)))
+            {
+                name = string.Concat(I, name, SERVICE);
+            }
+
+            var modifiers = AccessModifiers.Public;
+
+            var @interface = _interfaceGenerator
+                .Initialize(name, modifiers)
+                .Generate();
+
+            var interfaceNamespace = _namespaceGenerator
+                .Initialize(namespaceName)
+                .SetMemebers(@interface)
+                .Generate();
+
+            path = Path.Combine(path, string.Concat(name, CS_EXTENSION));
+
+            _codeFileGenerator.CreateFile(path, interfaceNamespace, usings);
         }
     }
 }

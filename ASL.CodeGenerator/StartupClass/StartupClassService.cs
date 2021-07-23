@@ -7,7 +7,7 @@ using CSCG.Abstract.Generators.Files;
 using CSCG.Abstract.Generators.Statements;
 using static ASL.CodeGenerator.Consts;
 
-namespace ASL.CodeGenerator
+namespace ASL.CodeGenerator.StartupClass
 {
     public class StartupClassService : IStartupClassService
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ASL.CodeGenerator
+namespace ASL.CodeGenerator.ServiceCollectionExtensions
 {
     public interface IServiceCollectionExtensionsService
     {

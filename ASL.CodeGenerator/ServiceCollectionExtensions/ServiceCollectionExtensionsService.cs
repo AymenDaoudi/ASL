@@ -24,7 +24,7 @@ using CSCG.Abstract.Repositories;
 using CSCG.Roslyn.Exceptions;
 using static ASL.CodeGenerator.Consts;
 
-namespace ASL.CodeGenerator
+namespace ASL.CodeGenerator.ServiceCollectionExtensions
 {
     public class ServiceCollectionExtensionsService : IServiceCollectionExtensionsService
     {
