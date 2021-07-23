@@ -12,7 +12,7 @@
     process
     {
         $ServiceProvider = Get-CodegeneratorServiceProvider
-        $Type = [type]"ASL.CodeGenerator.IStartupClassService"
+        $Type = [Type]"ASL.CodeGenerator.StartupClass.IStartupClassService"
         $StartupClassService = Resolve-DIService $ServiceProvider $Type
 
         $task = $StartupClassService.AddRegisterRepositoriesAndRegisterServicesAsync($StartupFilePath)
