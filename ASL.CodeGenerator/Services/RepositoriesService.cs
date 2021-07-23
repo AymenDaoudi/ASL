@@ -50,6 +50,11 @@ namespace ASL.CodeGenerator.Services
                 name += REPOSITORY;
             }
 
+            if ((!interfaceName.StartsWith(I)) && (!interfaceName.EndsWith(REPOSITORY)))
+            {
+                interfaceName = string.Concat(I, interfaceName, REPOSITORY);
+            }
+
             var modifiers = AccessModifiers.Public;
 
             ClassEntityBase @class;
