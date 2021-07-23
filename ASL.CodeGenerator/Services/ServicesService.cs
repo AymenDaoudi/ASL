@@ -45,16 +45,6 @@ namespace ASL.CodeGenerator.Services
             params string[] usings
         )
         {
-            if (!name.EndsWith(SERVICE))
-            {
-                name += SERVICE;
-            }
-
-            if ((!interfaceName.StartsWith(I)) && (!interfaceName.EndsWith(SERVICE)))
-            {
-                interfaceName = string.Concat(I, interfaceName, SERVICE);
-            }
-
             var modifiers = AccessModifiers.Public;
 
             ClassEntityBase @class;
@@ -94,11 +84,6 @@ namespace ASL.CodeGenerator.Services
             params string[] usings
         )
         {
-            if ((!name.StartsWith(I)) && (!name.EndsWith(SERVICE)))
-            {
-                name = string.Concat(I, name, SERVICE);
-            }
-
             var modifiers = AccessModifiers.Public;
 
             var @interface = _interfaceGenerator
