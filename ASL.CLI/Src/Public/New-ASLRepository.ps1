@@ -58,12 +58,14 @@
             $ServicesService.CreateInterface($RepositoryInterfaceName, $DomainFolder, "$SolutionName.Domain.Repositories.$RepositoryFolderName", "System")
             $ServicesService.Create($RepositoryClassName, $DataFolder, "$SolutionName.Data.Repositories.$RepositoryFolderName", $RepositoryInterfaceName, $usings)
 
-            Register-Repository $DILifeTime $RepositoryClassName $RepositoryInterfaceName
+            $usings = @("$SolutionName.Data.Repositories.$RepositoryFolderName", "$SolutionName.Domain.Repositories.$RepositoryFolderName")
+
+            Register-Repository $DILifeTime $RepositoryInterfaceName $RepositoryClassName $usings
         }
         else {
             $ServicesService.Create($RepositoryClassName, $DataFolder, "$SolutionName.Domain.Repositories.$RepositoryFolderName", "System")
 
-            Register-Repository $DILifeTime $RepositoryClassName
+            Register-Repository $DILifeTime $RepositoryClassName "$SolutionName.Domain.Repositories.$RepositoryFolderName"
         }
     }
     end

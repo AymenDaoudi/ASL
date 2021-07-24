@@ -45,7 +45,7 @@
 
         if ($existingService.Count -ne 0) {
             Write-Host "Service already exists."
-                break;
+            break;
         }
 
         if ($WithInterface) {
@@ -55,12 +55,12 @@
             $ServicesService.CreateInterface($ServiceInterfaceName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", "System")
             $ServicesService.Create($ServiceClassName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", $ServiceInterfaceName, "System")
 
-            Register-Service $DILifeTime $ServiceClassName $ServiceInterfaceName
+            Register-Service $DILifeTime $ServiceInterfaceName $ServiceClassName -Usings "$SolutionName.Services.$ServiceFolderName"
         }
         else {
             $ServicesService.Create($ServiceClassName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", "System")
 
-            Register-Service $DILifeTime $ServiceClassName
+            Register-Service $DILifeTime $ServiceClassName -Usings "$SolutionName.Services.$ServiceFolderName"
         }
 
         New-FolderIfNotExist -Location $ServiceFolder -Name "Models" | Out-Null

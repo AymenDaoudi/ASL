@@ -9,7 +9,10 @@
         [ValidateNotNullOrEmpty()]
         [string] $ConcreteServiceName,
         [Parameter(Mandatory = $false)]
-        [string] $AbstractServiceName
+        [string] $AbstractServiceName,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String[]]$Usings
     )
 
     begin
@@ -33,7 +36,7 @@
         }
 
         if ($AbstractServiceName) {
-            $task = $ServiceCollectionExtensionsService.RegisterNewServiceAsync($ServiceCollectionExtensionsFilePath, $DILifeTime, $ConcreteServiceName, $AbstractServiceName)
+            $task = $ServiceCollectionExtensionsService.RegisterNewServiceAsync($ServiceCollectionExtensionsFilePath, $DILifeTime, $ConcreteServiceName, $AbstractServiceName, $Usings)
         }
         else {
             #Implement other cases later

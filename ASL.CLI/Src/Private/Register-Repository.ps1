@@ -9,7 +9,10 @@
         [ValidateNotNullOrEmpty()]
         [string] $ConcreteRepositoryName,
         [Parameter(Mandatory = $false)]
-        [string] $AbstractRepositoryName
+        [string] $AbstractRepositoryName,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String[]]$Usings
     )
 
     begin
@@ -33,7 +36,7 @@
         }
 
         if ($AbstractRepositoryName) {
-            $task = $ServiceCollectionExtensionsService.RegisterNewRepositoryAsync($ServiceCollectionExtensionsFilePath, $DILifeTime, $ConcreteRepositoryName, $AbstractRepositoryName)
+            $task = $ServiceCollectionExtensionsService.RegisterNewRepositoryAsync($ServiceCollectionExtensionsFilePath, $DILifeTime, $ConcreteRepositoryName, $AbstractRepositoryName, $Usings)
         }
         else {
             #Implement other cases later
