@@ -5,7 +5,11 @@
         [ValidateNotNullOrEmpty()]
         [string] $ServiceName,
         [Parameter(Mandatory=$false)]
-        [Switch] $WithInterface = $false
+        [Switch] $WithInterface = $false,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('Scoped','Transient','Singleton')]
+        [string] $DILifeTime
     )
 
     begin
@@ -16,7 +20,11 @@
     process
     {
         $ServiceProvider = Get-CodegeneratorServiceProvider
-        $Type = [type]"ASL.CodeGenerator.IServicesService"
+        $FactoryType = [Type]"System.Func[ASL.CodeGenerator.Services.ServiceType, ASL.CodeGenerator.Services.IServicesService]"
+
+        [System.Func[ASL.CodeGenerator.Services.ServiceType, ASL.CodeGenerator.Services.IServicesService]]$Factory = Resolve-DIService $ServiceProvider $FactoryType
+
+        $servicesService = $Factory.Invoke([ASL.CodeGenerator.Services.ServiceType]::Service)
 
         $SolutionDirectory = Get-SolutionRootDirectory
 
@@ -31,18 +39,28 @@
 
         $ServiceFolder = New-FolderIfNotExist -Location "$SolutionDirectory\$SolutionName.Services\" -Name $ServiceFolderName
 
-        $ServicesService = Resolve-DIService $ServiceProvider $Type
+        $ServiceClassName = "$($ServiceName)Service"
 
-        try {
-            if ($WithInterface) {
-                $ServicesService.CreateService($ServiceFolder, "$SolutionName.Services.$ServiceFolderName", $ServiceName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName")
-            }
-            else {
-                $ServicesService.CreateService($ServiceFolder, "$SolutionName.Services.$ServiceFolderName", $ServiceName)
-            }
+        $existingService = Get-ChildItem "$ServiceFolder\$ServiceClassName*" -Include *.cs | Measure-Object
+
+        if ($existingService.Count -ne 0) {
+            Write-Host "Service already exists."
+            break;
         }
-        catch {
-            Write-Host "$($_.Exception.Message)"
+
+        if ($WithInterface) {
+
+            $ServiceInterfaceName = "I$($ServiceName)Service"
+
+            $ServicesService.CreateInterface($ServiceInterfaceName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", "System")
+            $ServicesService.Create($ServiceClassName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", $ServiceInterfaceName, "System")
+
+            Register-Service $DILifeTime $ServiceInterfaceName $ServiceClassName -Usings "$SolutionName.Services.$ServiceFolderName"
+        }
+        else {
+            $ServicesService.Create($ServiceClassName, $ServiceFolder, "$SolutionName.Services.$ServiceFolderName", "System")
+
+            Register-Service $DILifeTime $ServiceClassName -Usings "$SolutionName.Services.$ServiceFolderName"
         }
 
         New-FolderIfNotExist -Location $ServiceFolder -Name "Models" | Out-Null

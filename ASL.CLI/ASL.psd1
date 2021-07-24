@@ -69,7 +69,7 @@ Copyright = '(c) aymen.daoudi. All rights reserved.'
 NestedModules = @('.\Src\Nested\FileManagement\FileManagement.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @("New-Skeleton", "New-ASLService")
+FunctionsToExport = @("New-Skeleton", "New-ASLService", "New-ASLRepository")
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'

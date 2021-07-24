@@ -15,7 +15,7 @@
     process
     {
         $ServiceProvider = Get-CodegeneratorServiceProvider
-        $Type = [type]"ASL.CodeGenerator.IServiceCollectionExtensionsService"
+        $Type = [Type]"ASL.CodeGenerator.ServiceCollectionExtensions.IServiceCollectionExtensionsService"
         $ServiceCollectionExtensionsService = Resolve-DIService $ServiceProvider $Type
 
         $ServiceCollectionExtensionsService.CreateFile($location, $namespace, "Microsoft.Extensions.DependencyInjection")
