@@ -10,26 +10,30 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
             string filePath,
             DILifetime dILifeTime,
             string abstractTypeName,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         );
 
         Task RegisterNewRepositoryAsync(
             string filePath,
             DILifetime dILifeTime,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         );
 
         Task RegisterNewServiceAsync(
             string filePath,
             DILifetime dILifeTime,
             string abstractTypeName,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         );
 
         Task RegisterNewServiceAsync(
             string filePath,
             DILifetime dILifeTime,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         );
     }
 }

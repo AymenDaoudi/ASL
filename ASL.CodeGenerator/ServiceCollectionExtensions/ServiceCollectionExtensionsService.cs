@@ -93,13 +93,15 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
             string filePath,
             DILifetime dILifeTime,
             string abstractTypeName,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         )
         {
             return AddDiMethodToReturnStatementAsync(
                 filePath,
                 dILifeTime,
                 REGISTER_REPOSITORIES,
+                usings,
                 abstractTypeName,
                 ImplementationTypeName
             );
@@ -108,13 +110,15 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
         public Task RegisterNewRepositoryAsync(
             string filePath,
             DILifetime dILifeTime,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         )
         {
             return AddDiMethodToReturnStatementAsync(
                 filePath,
                 dILifeTime,
                 REGISTER_REPOSITORIES,
+                usings,
                 ImplementationTypeName
             );
         }
@@ -123,13 +127,15 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
             string filePath,
             DILifetime dILifeTime,
             string abstractTypeName,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         )
         {
             return AddDiMethodToReturnStatementAsync(
                 filePath,
                 dILifeTime,
                 REGISTER_SERVICES,
+                usings,
                 abstractTypeName,
                 ImplementationTypeName
             );
@@ -138,14 +144,15 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
         public Task RegisterNewServiceAsync(
             string filePath,
             DILifetime dILifeTime,
-            string ImplementationTypeName
+            string ImplementationTypeName,
+            params string[] usings
         )
         {
-
             return AddDiMethodToReturnStatementAsync(
                 filePath,
                 dILifeTime,
                 REGISTER_SERVICES,
+                usings,
                 ImplementationTypeName
             );
         }
@@ -154,6 +161,7 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
             string filePath,
             DILifetime dILifeTime,
             string methodName,
+            string[] usings,
             params string[] types
         )
         {
@@ -196,6 +204,8 @@ namespace ASL.CodeGenerator.ServiceCollectionExtensions
                 methodName,
                 newRturnStatement
             );
+
+            await _classModifier.AddUsingsAsync(filePath, usings);
         }
 
         private IEnumerable<ExtensionMethodEntity> GenerateMethods()
