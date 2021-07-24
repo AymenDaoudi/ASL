@@ -17,8 +17,6 @@ namespace ASL.CodeGenerator.Services
 {
     public class RepositoriesService : IServicesService
     {
-        private const string REPOSITORY = "Repository";
-
         private readonly IClassGenerator<ClassEntityBase, ClassMethodEntity> _classGenerator;
         private readonly IInterfaceGenerator<InterfaceEntityBase, InterfaceMethodEntity> _interfaceGenerator;
         private readonly INamespaceGenerator<NamespaceEntityBase<TypeEntityBase>, TypeEntityBase> _namespaceGenerator;
